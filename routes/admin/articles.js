@@ -1,6 +1,31 @@
 const express = require('express');
 const router = express.Router();
 const { Article } = require('../../models');
+const { Op } = require('sequelize');
+const { NotFoundError, success, failure } = require('../../utils/response');
+
+/**
+ * 公共方法：白名单过滤
+ */
+function filterBody(req) {
+    return {
+        title: req.body.title,
+        content: req.body.content
+    }
+}
+
+/**
+ * 公共方法：查询文章
+ */
+async function getArticle(req) {
+    const { id } = req.params;
+    const article = await Article.findByPk(id);
+    if (!article) {
+        throw new NotFoundError(`id为${id}的文章不存在`);
+    }
+    return article;
+}
+
 
 /**
  * 查询文章列表
@@ -8,25 +33,38 @@ const { Article } = require('../../models');
  */
 router.get('/', async function (req, res, next) {
     try {
+        const query = req.query;
+
+        const currentPage = Math.abs(Number(query.currentPage) || 1);
+        const pageSize = Math.abs(Number(query.pageSize)) || 10;
+        const offset = (currentPage - 1) * pageSize;
+
         const conditions = {
             order: [['id', 'DESC']],
+            limit: pageSize,
+            offset: offset
         };
 
-        const articles = await Article.findAll(conditions);
+        if (query.title) {
+            conditions.where = {
+                title: {
+                    [Op.like]: `%${query.title}%`
+                }
+            }
+        }
 
-        res.json({
-            status: true,
-            message: '查询文章列表成功',
-            data: articles
-        })
-    } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '查询文章列表失败',
-            data: {
-                errors: [error.message]
+        const { count, rows } = await Article.findAndCountAll(conditions);
+
+        success(res, '查询文章列表成功', {
+            articles: rows,
+            pagination: {
+                total: count,
+                currentPage,
+                pageSize
             }
         })
+    } catch (error) {
+        failure(res, error)
     }
 });
 
@@ -37,30 +75,13 @@ router.get('/', async function (req, res, next) {
  */
 router.get('/:id', async function (req, res, next) {
     try {
-        const { id } = req.params;
+        const article = await getArticle(req);
 
-        const article = await Article.findByPk(id);
-
-        if (article) {
-            return res.json({
-                status: true,
-                message: '查询文章详情成功',
-                data: article
-            })
-        } else {
-            return res.status(404).json({
-                status: false,
-                message: '文章不存在',
-            })
-        }
-    } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '查询文章详情失败',
-            data: {
-                errors: [error.message]
-            }
+        success(res, '查询文章详情成功', {
+            article
         })
+    } catch (error) {
+        failure(res, error)
     }
 })
 
@@ -71,28 +92,18 @@ router.get('/:id', async function (req, res, next) {
  */
 router.post('/', async function (req, res, next) {
     try {
-        const { title, content } = req.body;
+        //  白名单过滤
+        const body = filterBody(req)
 
-        const article = await Article.create({
-            title,
-            content
-        });
+        const article = await Article.create(body);
 
         // 201表示新建了资源
-        res.status(201).json({
-            status: true,
-            message: '创建文章成功',
-            data: article
-        })
+        success(res, '创建文章成功', {
+            article
+        }, 201)
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '创建文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        failure(res, error)
     }
 })
 
@@ -103,31 +114,13 @@ router.post('/', async function (req, res, next) {
  */
 router.delete('/:id', async function (req, res, next) {
     try {
-        const { id } = req.params;
+        const article = await getArticle(req);
 
-        const article = await Article.findByPk(id);
+        await article.destroy();
 
-        if (article) {
-            await article.destroy();
-
-            res.json({
-                status: true,
-                message: '删除文章成功',
-            })
-
-        } else
-            res.status(404).json({
-                status: false,
-                message: '文章不存在',
-            })
+        success(res, '删除文章成功')
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '删除文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        failure(res, error)
     }
 })
 
@@ -138,36 +131,18 @@ router.delete('/:id', async function (req, res, next) {
  */
 router.put('/:id', async function (req, res, next) {
     try {
-        const { id } = req.params;
-        const { title, content } = req.body;
+        const article = await getArticle(req);
+        const body = filterBody(req)
 
-        const article = await Article.findByPk(id);
+        await article.update(body);
 
-        if (article) {
-            await article.update({
-                title,
-                content
-            });
-
-            res.json({
-                status: true,
-                message: '更新文章成功',
-                data: article
-            })
-        } else
-            res.status(404).json({
-                status: false,
-                message: '文章不存在',
-            })
+        success(res, '更新文章成功', {
+            article
+        })
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '更新文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        failure(res, error)
     }
 })
+
 module.exports = router;
