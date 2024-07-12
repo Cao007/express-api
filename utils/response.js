@@ -13,7 +13,7 @@ class NotFoundError extends Error {
  * 请求成功响应
  */
 function success(res, message, data = {}, code = 200) {
-    res.status(code).json({
+    return res.status(code).json({
         status: true,
         message,
         data
@@ -42,7 +42,7 @@ function failure(res, error) {
         })
     }
 
-    res.status(500).json({
+    return res.status(500).json({
         status: false,
         message: '服务器错误',
         errors: [error.message]
