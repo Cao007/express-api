@@ -69,3 +69,5 @@ site/
 # VS Code settings
 .vscode/
 .history/
+
+data/
