@@ -9,16 +9,27 @@ const { Op } = require('sequelize');
  */
 router.get('/', async function (req, res, next) {
     try {
+        // 获取查询参数（query参数）
+        let { currentPage, pageSize, title } = req.query;
+
+        // 如果没有传递这两个参数，就使用默认值
+        // /admin/articles?currentPage=1&pageSize=10
+        currentPage = Math.abs(Number(currentPage)) || 1;
+        pageSize = Math.abs(Number(pageSize)) || 10;
+        const offset = (currentPage - 1) * pageSize;
+
         const conditions = {
             order: [['id', 'DESC']],
+            limit: pageSize,
+            offset: offset,
         };
 
-        // 如果有查询参数，则添加查询条件
+        // 如果有查询参数title，则添加模糊查询条件
         // /admin/articles?title=xxx
-        if (req.query.title) {
+        if (title) {
             conditions.where = {
                 title: {
-                    [Op.like]: `%${req.query.title}%`
+                    [Op.like]: `%${title}%`
                 }
             }
         };
@@ -28,7 +39,12 @@ router.get('/', async function (req, res, next) {
         res.json({
             status: true,
             message: '查询文章列表成功',
-            data: rows
+            data: rows,
+            pagination: {
+                total: count,
+                currentPage,
+                pageSize,
+            }
         })
     } catch (error) {
         res.status(500).json({
@@ -97,13 +113,22 @@ router.post('/', async function (req, res, next) {
         })
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '创建文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => err.message);
+            res.status(400).json({
+                status: false,
+                message: '参数验证失败',
+                errors
+            })
+        } else {
+            res.status(500).json({
+                status: false,
+                message: '创建文章失败',
+                data: {
+                    errors: [error.message]
+                }
+            })
+        }
     }
 })
 
@@ -181,4 +206,5 @@ router.put('/:id', async function (req, res, next) {
         })
     }
 })
+
 module.exports = router;
