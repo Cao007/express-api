@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Article } = require('../../models');
+const { Op } = require('sequelize');
 
 /**
  * 查询文章列表
@@ -12,12 +13,22 @@ router.get('/', async function (req, res, next) {
             order: [['id', 'DESC']],
         };
 
-        const articles = await Article.findAll(conditions);
+        // 如果有查询参数，则添加查询条件
+        // /admin/articles?title=xxx
+        if (req.query.title) {
+            conditions.where = {
+                title: {
+                    [Op.like]: `%${req.query.title}%`
+                }
+            }
+        };
+
+        const { count, rows } = await Article.findAndCountAll(conditions);
 
         res.json({
             status: true,
             message: '查询文章列表成功',
-            data: articles
+            data: rows
         })
     } catch (error) {
         res.status(500).json({
