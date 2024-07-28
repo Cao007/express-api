@@ -7,6 +7,9 @@ const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 // 导入后台admin路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
+const adminCategoriesRouter = require('./routes/admin/categories');
+const adminSettingsRouter = require('./routes/admin/settings');
+const adminUsersRouter = require('./routes/admin/users');
 
 const app = express();
 
@@ -20,5 +23,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 // 使用后台路由admin
 app.use('/admin/articles', adminArticlesRouter);
+app.use('/admin/categories', adminCategoriesRouter);
+app.use('/admin/settings', adminSettingsRouter);
+app.use('/admin/users', adminUsersRouter);
 
 module.exports = app;
