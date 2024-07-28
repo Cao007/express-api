@@ -47,13 +47,22 @@ router.get('/', async function (req, res, next) {
             }
         })
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '查询文章列表失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => err.message);
+            res.status(400).json({
+                status: false,
+                message: '参数验证失败',
+                errors
+            })
+        } else {
+            res.status(500).json({
+                status: false,
+                message: '查询文章列表失败',
+                data: {
+                    errors: [error.message]
+                }
+            })
+        }
     }
 });
 
@@ -81,13 +90,22 @@ router.get('/:id', async function (req, res, next) {
             })
         }
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '查询文章详情失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => err.message);
+            res.status(400).json({
+                status: false,
+                message: '参数验证失败',
+                errors
+            })
+        } else {
+            res.status(500).json({
+                status: false,
+                message: '查询文章详情失败',
+                data: {
+                    errors: [error.message]
+                }
+            })
+        }
     }
 })
 
@@ -157,13 +175,22 @@ router.delete('/:id', async function (req, res, next) {
                 message: '文章不存在',
             })
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '删除文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => err.message);
+            res.status(400).json({
+                status: false,
+                message: '参数验证失败',
+                errors
+            })
+        } else {
+            res.status(500).json({
+                status: false,
+                message: '删除文章失败',
+                data: {
+                    errors: [error.message]
+                }
+            })
+        }
     }
 })
 
@@ -197,13 +224,22 @@ router.put('/:id', async function (req, res, next) {
             })
 
     } catch (error) {
-        res.status(500).json({
-            status: false,
-            message: '更新文章失败',
-            data: {
-                errors: [error.message]
-            }
-        })
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => err.message);
+            res.status(400).json({
+                status: false,
+                message: '参数验证失败',
+                errors
+            })
+        } else {
+            res.status(500).json({
+                status: false,
+                message: '更新文章失败',
+                data: {
+                    errors: [error.message]
+                }
+            })
+        }
     }
 })
 
