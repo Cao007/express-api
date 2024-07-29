@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Category } = require('../../models');
+const { Category, Course } = require('../../models');
 const { Op } = require('sequelize');
 const {
     NotFoundError,
@@ -101,6 +101,12 @@ router.delete('/:id', async function (req, res, next) {
         // 查询当前分类
         const category = await getCategoryByID(req)
 
+        // 删除分类前，查询是否该分类下有课程
+        const count = await Course.count({ where: { categoryId: req.params.id } });
+        if (count > 0) {
+            throw new Error('当前分类有课程，无法删除。');
+        }
+
         // 操作数据库：删除分类
         await category.destroy();
 
@@ -139,8 +145,18 @@ async function getCategoryByID(req) {
     // 获取params参数（path参数）
     const { id } = req.params;
 
+    // 查询一个分类下的所有课程
+    const condition = {
+        include: [
+            {
+                model: Course,
+                as: 'courses',
+            },
+        ]
+    }
+
     // 操作数据库： 查询当前分类通过id
-    const category = await Category.findByPk(id);
+    const category = await Category.findByPk(id, condition);
 
     if (!category) {
         throw new NotFoundError(`ID: ${id}的分类未找到。`)
