@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Chapter, Course } = require('../../models');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { NotFoundError } = require('../../utils/errors');
 const { success, failure } = require('../../utils/responses');
 
@@ -25,7 +25,8 @@ router.get('/', async function (req, res, next) {
         const offset = (currentPage - 1) * pageSize;
         const conditions = {
             ...getCondition(),
-            // 先按照rank字段，从小到大排序。如果出现了两个相同的rank值，再用id来从小到大来排序
+            where: {},
+            // 先按照rank字段升序。如果出现了两个相同的rank值，再用id来升序
             order: [
                 ['rank', 'ASC'],
                 ['id', 'ASC']
@@ -34,19 +35,13 @@ router.get('/', async function (req, res, next) {
             offset: offset,
         };
 
-        conditions.where = {
-            courseId: {
-                [Op.eq]: courseId
-            }
-        };
+        conditions.where.courseId = courseId;
 
         // 模糊查询
         // /admin/chapters?title=xxx
         if (title) {
-            conditions.where = {
-                title: {
-                    [Op.like]: `%${title}%`
-                }
+            conditions.where.title = {
+                [Op.like]: `%${title}%`
             }
         };
 
@@ -97,6 +92,9 @@ router.post('/', async function (req, res, next) {
         // 操作数据库： 创建章节
         const chapter = await Chapter.create(body);
 
+        // 增加课程章节数
+        await Course.increment('chaptersCount', { where: { id: chapter.courseId } });
+
         success(res, '创建章节成功', { chapter }, 201); // 201表示新建了资源
     } catch (error) {
         failure(res, error);
@@ -115,6 +113,9 @@ router.delete('/:id', async function (req, res, next) {
 
         // 操作数据库：删除章节
         await chapter.destroy();
+
+        // 减少课程章节数
+        await Course.decrement('chaptersCount', { where: { id: chapter.courseId } });
 
         success(res, '删除章节成功')
     } catch (error) {

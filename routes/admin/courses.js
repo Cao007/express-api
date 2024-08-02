@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Course, Category, User, Chapter } = require('../../models');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { NotFoundError } = require('../../utils/errors');
 const { success, failure } = require('../../utils/responses');
 
@@ -22,6 +22,7 @@ router.get('/', async function (req, res, next) {
         const offset = (currentPage - 1) * pageSize;
         const conditions = {
             ...getCondition(),
+            where: {},
             order: [['id', 'DESC']],
             limit: pageSize,
             offset: offset,
@@ -30,44 +31,25 @@ router.get('/', async function (req, res, next) {
         // 模糊查询
         // /admin/courses?title=xxx
         if (categoryId) {
-            conditions.where = {
-                categoryId: {
-                    [Op.eq]: categoryId
-                }
-            };
+            conditions.where.categoryId = categoryId;
         }
 
         if (userId) {
-            conditions.where = {
-                userId: {
-                    [Op.eq]: userId
-                }
-            };
+            conditions.where.userId = userId;
         }
 
         if (name) {
-            conditions.where = {
-                name: {
-                    [Op.like]: `%${name}%`
-                }
+            conditions.where.name = {
+                [Op.like]: `%${name}%`
             };
         }
 
         if (recommended) {
-            conditions.where = {
-                recommended: {
-                    // 需要转布尔值
-                    [Op.eq]: recommended === 'true'
-                }
-            };
+            conditions.where.recommended = recommended === 'true';
         }
 
         if (introductory) {
-            conditions.where = {
-                introductory: {
-                    [Op.eq]: introductory === 'true'
-                }
-            };
+            conditions.where.introductory = introductory === 'true';
         }
 
         // 操作数据库：查找所有课程

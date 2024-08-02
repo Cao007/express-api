@@ -21,7 +21,8 @@ router.get('/', async function (req, res, next) {
         pageSize = Math.abs(Number(pageSize)) || 10;
         const offset = (currentPage - 1) * pageSize;
         const conditions = {
-            order: [['id', 'DESC']],
+            where: {},
+            order: [['id', 'ASC']],
             limit: pageSize,
             offset: offset,
         };
@@ -29,37 +30,22 @@ router.get('/', async function (req, res, next) {
         // 模糊查询
         // /admin/users?nickname=xxx
         if (email) {
-            conditions.where = {
-                email: {
-                    [Op.eq]: email
-                }
-            };
+            conditions.where.email = email;
         }
 
         if (username) {
-            conditions.where = {
-                username: {
-                    [Op.eq]: username
-                }
-            };
+            conditions.where.username = username;
         }
 
         if (nickname) {
-            conditions.where = {
-                nickname: {
-                    [Op.like]: `%${nickname}%`
-                }
+            conditions.where.nickname = {
+                [Op.like]: `%${nickname}%`
             };
         }
 
         if (role) {
-            conditions.where = {
-                role: {
-                    [Op.eq]: role
-                }
-            };
+            conditions.where.role = role;
         }
-
 
         // 操作数据库：查找所有用户
         const { count, rows } = await User.findAndCountAll(conditions);

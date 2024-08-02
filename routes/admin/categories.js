@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Category, Course } = require('../../models');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { NotFoundError } = require('../../utils/errors');
 const { success, failure } = require('../../utils/responses');
 
@@ -21,7 +21,11 @@ router.get('/', async function (req, res, next) {
         pageSize = Math.abs(Number(pageSize)) || 10;
         const offset = (currentPage - 1) * pageSize;
         const conditions = {
-            order: [['id', 'DESC']],
+            where: {},
+            order: [
+                ['rank', 'ASC'],
+                ['id', 'ASC']
+            ],
             limit: pageSize,
             offset: offset,
         };
@@ -29,10 +33,8 @@ router.get('/', async function (req, res, next) {
         // 模糊查询
         // /admin/categories?name=xxx
         if (name) {
-            conditions.where = {
-                name: {
-                    [Op.like]: `%${name}%`
-                }
+            conditions.where.name = {
+                [Op.like]: `%${name}%`
             }
         };
 

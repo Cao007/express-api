@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { Article } = require('../../models');
-const { Op } = require('sequelize');
+const { Op, where } = require('sequelize');
 const { NotFoundError } = require('../../utils/errors');
 const { success, failure } = require('../../utils/responses');
 
@@ -24,6 +24,7 @@ router.get('/', async function (req, res, next) {
         pageSize = Math.abs(Number(pageSize)) || 10;
         const offset = (currentPage - 1) * pageSize;
         const conditions = {
+            where: {},
             order: [['id', 'DESC']],
             limit: pageSize,
             offset: offset,
@@ -32,10 +33,8 @@ router.get('/', async function (req, res, next) {
         // 模糊查询
         // /admin/articles?title=xxx
         if (title) {
-            conditions.where = {
-                title: {
-                    [Op.like]: `%${title}%`
-                }
+            conditions.where.title = {
+                [Op.like]: `%${title}%`
             }
         };
 

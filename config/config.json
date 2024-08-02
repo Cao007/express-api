@@ -5,7 +5,8 @@
     "database": "express-api-development",
     "host": "127.0.0.1",
     "dialect": "mysql",
-    "timezone": "+08:00"
+    "timezone": "+08:00",
+    "logQueryParameters": true
   },
   "test": {
     "username": "root",
