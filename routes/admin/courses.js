@@ -2,11 +2,9 @@ const express = require('express');
 const router = express.Router();
 const { Course, Category, User, Chapter } = require('../../models');
 const { Op } = require('sequelize');
-const {
-    NotFoundError,
-    success,
-    failure
-} = require('../../utils/response');
+const { NotFoundError } = require('../../utils/errors');
+const { success, failure } = require('../../utils/responses');
+
 
 /**
  * 查询课程列表 
@@ -116,6 +114,9 @@ router.post('/', async function (req, res, next) {
         // 获取body参数
         const body = filterBody(req);
 
+        // 获取当前登录的用户 ID
+        body.userId = req.user.id;
+
         // 操作数据库： 创建课程
         const course = await Course.create(body);
 
@@ -201,7 +202,8 @@ async function getCourseByID(req) {
 function filterBody(req) {
     return {
         categoryId: req.body.categoryId,
-        userId: req.body.userId,
+        // 用户不应该通过表单传递过来的userId，应该是谁登录了，那就是谁发布的课程
+        // userId: req.body.userId,
         name: req.body.name,
         image: req.body.image,
         recommended: req.body.recommended,

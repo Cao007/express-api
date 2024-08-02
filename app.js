@@ -2,10 +2,12 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+require('dotenv').config(); // 导入环境变量
+const adminAuth = require('./middlewares/admin-auth');
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
-// 导入后台admin路由文件
+// 导入后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
 const adminCategoriesRouter = require('./routes/admin/categories');
 const adminSettingsRouter = require('./routes/admin/settings');
@@ -13,6 +15,7 @@ const adminUsersRouter = require('./routes/admin/users');
 const adminCoursesRouter = require('./routes/admin/courses');
 const adminChaptersRouter = require('./routes/admin/chapters');
 const adminChartsRouter = require('./routes/admin/charts');
+const adminAuthRouter = require('./routes/admin/auth');
 
 const app = express();
 
@@ -24,13 +27,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-// 使用后台路由admin
-app.use('/admin/articles', adminArticlesRouter);
-app.use('/admin/categories', adminCategoriesRouter);
-app.use('/admin/settings', adminSettingsRouter);
-app.use('/admin/users', adminUsersRouter);
-app.use('/admin/courses', adminCoursesRouter);
-app.use('/admin/chapters', adminChaptersRouter);
-app.use('/admin/charts', adminChartsRouter);
+// 后台路由配置
+app.use('/admin/articles', adminAuth, adminArticlesRouter);
+app.use('/admin/categories', adminAuth, adminCategoriesRouter);
+app.use('/admin/settings', adminAuth, adminSettingsRouter);
+app.use('/admin/users', adminAuth, adminUsersRouter);
+app.use('/admin/courses', adminAuth, adminCoursesRouter);
+app.use('/admin/chapters', adminAuth, adminChaptersRouter);
+app.use('/admin/charts', adminAuth, adminChartsRouter);
+app.use('/admin/auth', adminAuthRouter);
 
 module.exports = app;
