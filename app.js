@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 require('dotenv').config(); // 导入环境变量
 const adminAuth = require('./middlewares/admin-auth');
+const userAuth = require('./middlewares/user-auth');
 
 // 导入后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
@@ -22,6 +23,8 @@ const frontChaptersRouter = require('./routes/front/chapters');
 const frontArticlesRouter = require('./routes/front/articles');
 const frontSettingsRouter = require('./routes/front/settings');
 const frontSearchRouter = require('./routes/front/search');
+const frontAuthRouter = require('./routes/front/auth');
+const frontUserRouter = require('./routes/front/user');
 
 
 const app = express();
@@ -50,6 +53,8 @@ app.use('/front/chapters', frontChaptersRouter);
 app.use('/front/articles', frontArticlesRouter);
 app.use('/front/settings', frontSettingsRouter);
 app.use('/front/search', frontSearchRouter);
+app.use('/front/auth', frontAuthRouter);
+app.use('/front/user', userAuth, frontUserRouter);
 
 
 module.exports = app;
