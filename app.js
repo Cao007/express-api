@@ -18,6 +18,11 @@ const adminAuthRouter = require('./routes/admin/auth');
 const frontHomeRouter = require('./routes/front/home');
 const frontCategoriesRouter = require('./routes/front/categories');
 const frontCoursesRouter = require('./routes/front/courses');
+const frontChaptersRouter = require('./routes/front/chapters');
+const frontArticlesRouter = require('./routes/front/articles');
+const frontSettingsRouter = require('./routes/front/settings');
+const frontSearchRouter = require('./routes/front/search');
+
 
 const app = express();
 // 常用中间件
@@ -41,5 +46,10 @@ app.use('/admin/auth', adminAuthRouter);
 app.use('/front/home', frontHomeRouter);
 app.use('/front/categories', frontCategoriesRouter);
 app.use('/front/courses', frontCoursesRouter);
+app.use('/front/chapters', frontChaptersRouter);
+app.use('/front/articles', frontArticlesRouter);
+app.use('/front/settings', frontSettingsRouter);
+app.use('/front/search', frontSearchRouter);
+
 
 module.exports = app;
