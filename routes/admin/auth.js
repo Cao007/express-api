@@ -6,7 +6,6 @@ const { BadRequestError, UnauthorizedError, NotFoundError } = require('../../uti
 const { success, failure } = require('../../utils/responses');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-// const crypto = require('crypto'); // 用于生成随机字符串
 
 /**
  * 管理员登录
@@ -14,9 +13,6 @@ const jwt = require('jsonwebtoken');
  */
 router.post('/sign_in', async (req, res) => {
     try {
-        // 生成一个随机字符串，作为 .env 文件中的秘钥
-        // console.log(crypto.randomBytes(32).toString('hex'));
-
         const { login, password } = req.body;
 
         if (!login) {

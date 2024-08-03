@@ -19,7 +19,7 @@ router.post('/sign_up', async function (req, res) {
             username: req.body.username,
             nickname: req.body.nickname,
             password: req.body.password,
-            sex: 2,
+            gender: 2,
             role: 0
         }
 

@@ -27,7 +27,7 @@ router.put('/info', async function (req, res) {
     try {
         const body = {
             nickname: req.body.nickname,
-            sex: req.body.sex,
+            gender: req.body.gender,
             company: req.body.company,
             introduce: req.body.introduce,
             avatar: req.body.avatar

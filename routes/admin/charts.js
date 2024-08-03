@@ -6,14 +6,14 @@ const { success, failure } = require('../../utils/responses');
 
 /**
  * 统计用户性别
- * GET /admin/charts/sex
+ * GET /admin/charts/gender
  */
-router.get('/sex', async function (req, res, next) {
+router.get('/gender', async function (req, res, next) {
     try {
         // 查询用户性别
-        const male = await User.count({ where: { sex: 0 } });
-        const female = await User.count({ where: { sex: 1 } });
-        const unknown = await User.count({ where: { sex: 2 } });
+        const male = await User.count({ where: { gender: 0 } });
+        const female = await User.count({ where: { gender: 1 } });
+        const unknown = await User.count({ where: { gender: 2 } });
 
         // 构造数据
         const data = [

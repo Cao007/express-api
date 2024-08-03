@@ -10,7 +10,7 @@ module.exports = {
         username: 'admin',
         password: bcrypt.hashSync('123123', 10),
         nickname: '超厉害的管理员',
-        sex: 2,
+        gender: 2,
         role: 100,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -20,7 +20,7 @@ module.exports = {
         username: 'user1',
         password: bcrypt.hashSync('123123', 10),
         nickname: '普通用户1',
-        sex: 0,
+        gender: 0,
         role: 0,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -30,7 +30,7 @@ module.exports = {
         username: 'user2',
         password: bcrypt.hashSync('123123', 10),
         nickname: '普通用户2',
-        sex: 0,
+        gender: 0,
         role: 0,
         createdAt: new Date(),
         updatedAt: new Date()
@@ -40,7 +40,7 @@ module.exports = {
         username: 'user3',
         password: bcrypt.hashSync('123123', 10),
         nickname: '普通用户3',
-        sex: 1,
+        gender: 1,
         role: 0,
         createdAt: new Date(),
         updatedAt: new Date()

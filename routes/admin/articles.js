@@ -12,9 +12,6 @@ const { success, failure } = require('../../utils/responses');
  */
 router.get('/', async function (req, res, next) {
     try {
-        // 使用req对象中挂载的user对象
-        // return res.json({ currentUser: req.user })
-
         // 获取查询参数（query参数）
         let { currentPage, pageSize, title } = req.query;
 
