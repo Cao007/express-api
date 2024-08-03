@@ -45,6 +45,7 @@ console.log(crypto.randomBytes(32).toString('hex'));
 项目使用 Docker 容器运行 MySQL 数据库。安装好 Docker 后，可直接启动 MySQL。
 
 ```shell
+# 在项目根目录下执行命令
 docker-compose up -d
 ```
 
