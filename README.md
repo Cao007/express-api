@@ -1,6 +1,11 @@
 ## express-api
 
-项目使用了 Node.js + Express + MySQL + Sequelize ORM 开发。
+技术栈
+- Node.js
+- Express
+- MySQL
+- Sequelize ORM
+- Docker
 
 ## 配置环境变量
 
