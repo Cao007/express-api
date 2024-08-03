@@ -1,73 +1,16 @@
-# Node modules
-node_modules/
+# Ignore Node.js files.
+/node_modules
 
-# Logs
-logs/
-*.log
-npm-debug.log*
+# Ignore environment files.
+/.env
 
-# Environment variables
-.env
+# Ignore editor files.
+/.idea
+/.vscode
 
-# Editor directories and files
-.vscode/
-.idea/
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# Operating system files
+# Ignore system files.
 .DS_Store
 Thumbs.db
 
-# Optional npm cache directory
-.npm
-
-# Coverage directory used by tools like istanbul
-coverage/
-
-# Build output directories
-dist/
-build/
-
-# Yarn integrity file
-.yarn-integrity
-
-# Optional REPL history
-.node_repl_history
-
-# TypeScript cache
-*.tsbuildinfo
-
-# Dependency directories
-jspm_packages/
-
-# Next.js build output
-.next/
-out/
-
-# Nuxt.js build output
-.nuxt/
-
-# Svelte build output
-.svelte-kit/
-
-# TailwindCSS
-tailwind.config.js
-
-# Gatsby files
-.cache/
-public/
-
-# Static site generators
-site/
-
-# Storybook files
-.storybook/
-
-# VS Code settings
-.vscode/
-.history/
-
-data/
+# Ignore Docker data.
+/data
