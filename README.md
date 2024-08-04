@@ -15,11 +15,18 @@
 NODE_ENV=development
 PORT=3000
 SECRET=你的秘钥
+QINIU_DOMAIN=七牛云存储空间的访问域名
+QINIU_UPLOAD_URL=七牛云上传地址
+QINIU_ACCESS_KEY=七牛云秘钥中的AK
+QINIU_SECRET_KEY=七牛云秘钥中的SK
+QINIU_BUCKET=七牛云的存储空间名称
 ```
 
 - `NODE_ENV`配置为开发环境，如部署在生产环境可改为`production`。
 - `PORT`配置为服务端口
 - `SECRET`配置为秘钥。
+- `QINIU`开头的配置，均为七牛云的配置。请注册七牛云账号，并创建存储空间。推荐绑定域名，如未绑定域名，也可以先暂时使用七牛云提供的测试域名。
+
 
 ## 生成秘钥
 
