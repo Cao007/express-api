@@ -26,6 +26,8 @@ const frontAuthRouter = require('./routes/front/auth');
 const frontUserRouter = require('./routes/front/user');
 // 导入公共路由文件
 const uploadsRouter = require('./routes/uploads');
+const treesRouter = require('./routes/trees');
+
 
 // 常用中间件
 app.use(logger('dev'));
@@ -43,5 +45,6 @@ app.use('/front/auth', frontAuthRouter);
 app.use('/front/user', userAuth, frontUserRouter);
 // 公共路由配置
 app.use('/uploads', userAuth, uploadsRouter); // 添加用户认证中间件，只有前台登录用户才能访问上传接口
+app.use('/trees', treesRouter);
 
 module.exports = app;
