@@ -19,7 +19,7 @@ router.post('/sign_up', async function (req, res) {
             username: req.body.username,
             nickname: req.body.nickname,
             password: req.body.password,
-            gender: 2,
+            gender: req.body.gender,
             role: 0
         }
 
@@ -28,7 +28,7 @@ router.post('/sign_up', async function (req, res) {
         // 删除响应中的密码字段
         delete user.dataValues.password;
 
-        success(res, '创建用户成功。', { user }, 201);
+        success(res, '注册用户成功。', { user }, 201);
     } catch (error) {
         failure(res, error);
     }

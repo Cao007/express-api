@@ -12,9 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      models.User.hasMany(models.Course, { as: 'courses' });
-      // Course和User是多对多关系，通过中间表Like关联
-      models.User.belongsToMany(models.Course, { through: models.Like, foreignKey: 'userId', as: 'likeCourses' });
+      // define association here
     }
   }
   User.init({
@@ -22,13 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: '邮箱必须填写。' },
-        notEmpty: { msg: '邮箱不能为空。' },
-        isEmail: { msg: '邮箱格式不正确。' },
+        notNull: { msg: '邮箱必须填写' },
+        notEmpty: { msg: '邮箱不能为空' },
+        isEmail: { msg: '邮箱格式不正确' },
         async isUnique(value) {
-          const user = await User.findOne({ where: { email: value } })
+          const user = await User.findOne({ where: { email: value } });
           if (user) {
-            throw new Error('邮箱已存在，请直接登录。');
+            throw new Error('邮箱已被注册');
           }
         }
       }
@@ -37,16 +35,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: '用户名必须填写。' },
-        notEmpty: { msg: '用户名不能为空。' },
-        len: { args: [2, 45], msg: '用户名长度必须是2 ~ 45之间。' },
+        notNull: { msg: '用户名必须填写' },
+        notEmpty: { msg: '用户名不能为空' },
+        len: { args: [2, 45], msg: '用户名长度在2到45个字符之间' },
         async isUnique(value) {
-          const user = await User.findOne({ where: { username: value } })
+          const user = await User.findOne({ where: { username: value } });
           if (user) {
-            throw new Error('用户名已经存在。');
+            throw new Error('用户名已被注册');
           }
         }
-      },
+      }
     },
     password: {
       type: DataTypes.STRING,
@@ -70,19 +68,25 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        notNull: { msg: '昵称必须填写。' },
-        notEmpty: { msg: '昵称不能为空。' },
-        len: { args: [2, 45], msg: '昵称长度必须是2 ~ 45之间。' }
-      }
+        notNull: { msg: '昵称必须填写' },
+        notEmpty: { msg: '昵称不能为空' },
+        len: { args: [2, 45], msg: '昵称长度在2到45个字符之间' },
+      },
+    },
+    avatar: {
+      type: DataTypes.STRING,
+      validate: {
+        isUrl: { msg: '图片地址不正确' },
+      },
     },
     gender: {
       type: DataTypes.TINYINT,
       allowNull: false,
       validate: {
-        notNull: { msg: '性别必须填写。' },
-        notEmpty: { msg: '性别不能为空。' },
-        isIn: { args: [[0, 1, 2]], msg: '性别的值必须是，女性：0 男性：1 未选择：2。' }
-      }
+        notNull: { msg: '性别必须填写' },
+        notEmpty: { msg: '性别不能为空' },
+        isIn: { args: [[0, 1, 2]], msg: '性别的值必须是，男性：0 女性：1 未选择：2' }
+      },
     },
     company: DataTypes.STRING,
     introduce: DataTypes.TEXT,
@@ -90,17 +94,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TINYINT,
       allowNull: false,
       validate: {
-        notNull: { msg: '用户组必须选择。' },
-        notEmpty: { msg: '用户组不能为空。' },
-        isIn: { args: [[0, 100]], msg: '用户组的值必须是，普通用户：0 管理员：100。' }
+        notNull: { msg: '角色必须填写' },
+        notEmpty: { msg: '角色不能为空' },
+        isIn: { args: [[0, 100]], msg: '角色的值必须是，普通用户：0 管理员：100' }
       }
-    },
-    avatar: {
-      type: DataTypes.STRING,
-      validate: {
-        isUrl: { msg: '图片地址不正确。' }
-      }
-    },
+    }
   }, {
     sequelize,
     modelName: 'User',

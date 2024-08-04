@@ -73,7 +73,7 @@ router.get('/', async function (req, res, next) {
 router.get('/:id', async function (req, res, next) {
     try {
         // 查询当前用户
-        const user = await getUserByID(req)
+        const user = await getUser(req)
 
         success(res, `查询用户详情成功`, { user })
     } catch (error) {
@@ -108,7 +108,7 @@ router.post('/', async function (req, res, next) {
 router.put('/:id', async function (req, res, next) {
     try {
         // 查询当前用户
-        const user = await getUserByID(req);
+        const user = await getUser(req);
 
         // 获取body参数
         const body = filterBody(req);
@@ -125,7 +125,7 @@ router.put('/:id', async function (req, res, next) {
 /**
  * 公共方法：查询当前用户
  */
-async function getUserByID(req) {
+async function getUser(req) {
     // 获取params参数（path参数）
     const { id } = req.params;
 

@@ -25,6 +25,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      avatar: {
+        type: Sequelize.STRING
+      },
       gender: {
         allowNull: false,
         defaultValue: 2,
@@ -50,10 +53,11 @@ module.exports = {
         type: Sequelize.DATE
       }
     });
+
     await queryInterface.addIndex(
       'Users', {
-      fields: ['email'],  // 要索引的字段
-      unique: true        // 唯一索引
+      fields: ['email'],
+      unique: true
     });
     await queryInterface.addIndex(
       'Users', {
@@ -62,10 +66,9 @@ module.exports = {
     });
     await queryInterface.addIndex(
       'Users', {
-      fields: ['role']
+      fields: ['role'],
     });
   },
-
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Users');
   }
