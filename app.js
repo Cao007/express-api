@@ -21,6 +21,7 @@ app.use(cors(corsOptions));
 // 导入后台路由文件
 const adminAuthRouter = require('./routes/admin/auth');
 const adminUsersRouter = require('./routes/admin/users');
+const adminChartsRouter = require('./routes/admin/charts');
 // 导入前台路由文件
 const frontAuthRouter = require('./routes/front/auth');
 const frontUserRouter = require('./routes/front/user');
@@ -40,6 +41,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 后台路由配置
 app.use('/admin/auth', adminAuthRouter);
 app.use('/admin/users', adminAuth, adminUsersRouter);
+app.use('/admin/charts', adminAuth, adminChartsRouter);
 // 前台路由配置
 app.use('/front/auth', frontAuthRouter);
 app.use('/front/user', userAuth, frontUserRouter);
