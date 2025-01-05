@@ -6,6 +6,7 @@ const logger = require('morgan');
 const indexRouter = require('./routes/index');
 // 后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
+const adminCatgoriesRouter = require('./routes/admin/categories');
 
 const app = express();
 
@@ -18,5 +19,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 // 后台路由配置
 app.use('/admin/articles', adminArticlesRouter);
+app.use('/admin/categories', adminCatgoriesRouter);
 
 module.exports = app;
