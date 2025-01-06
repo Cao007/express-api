@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Category } = require('../../models');
+const { Category, Course } = require('../../models');
 const { Op } = require('sequelize');
 const {
   NotFoundError,
@@ -98,6 +98,12 @@ router.put('/:id', async function (req, res) {
 router.delete('/:id', async function (req, res) {
   try {
     const category = await getCategory(req);
+
+    // 检查当前分类是否有课程，防止孤儿记录
+    const count = await Course.count({ where: { categoryId: req.params.id } });
+    if (count > 0) {
+      throw new Error('当前分类有课程，无法删除。');
+    }
 
     await category.destroy();
     success(res, '删除分类成功。');

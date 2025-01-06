@@ -116,21 +116,6 @@ router.put('/:id', async function (req, res) {
 });
 
 /**
- * 删除用户
- * DELETE /admin/users/:id
- */
-router.delete('/:id', async function (req, res) {
-  try {
-    const user = await getUser(req);
-
-    await user.destroy();
-    success(res, '删除用户成功。');
-  } catch (error) {
-    failure(res, error);
-  }
-});
-
-/**
  * 公共方法：查询当前用户
  */
 async function getUser(req) {
