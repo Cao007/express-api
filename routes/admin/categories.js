@@ -13,32 +13,21 @@ const { success, failure } = require('../../utils/responses');
 router.get('/', async function (req, res) {
   try {
     const query = req.query;
-    const currentPage = Math.abs(Number(query.currentPage)) || 1;
-    const pageSize = Math.abs(Number(query.pageSize)) || 10;
-    const offset = (currentPage - 1) * pageSize;
 
     const condition = {
+      where: {},
       order: [['rank', 'ASC'], ['id', 'ASC']],
-      limit: pageSize,
-      offset: offset
     };
 
     if (query.name) {
-      condition.where = {
-        name: {
-          [Op.like]: `%${query.name}%`
-        }
+      condition.where.name = {
+        [Op.like]: `%${query.name}%`
       };
     }
 
-    const { count, rows } = await Category.findAndCountAll(condition);
+    const categories = await Category.findAll(condition);
     success(res, '查询分类列表成功。', {
-      categories: rows,
-      pagination: {
-        total: count,
-        currentPage,
-        pageSize,
-      }
+      categories: categories,
     });
   } catch (error) {
     failure(res, error);

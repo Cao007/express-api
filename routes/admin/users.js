@@ -18,41 +18,28 @@ router.get('/', async function (req, res) {
     const offset = (currentPage - 1) * pageSize;
 
     const condition = {
+      where: {},
       order: [['id', 'DESC']],
       limit: pageSize,
       offset: offset
     };
 
     if (query.email) {
-      condition.where = {
-        email: {
-          [Op.eq]: query.email
-        }
-      };
+      condition.where.email = query.email;
     }
 
     if (query.username) {
-      condition.where = {
-        username: {
-          [Op.eq]: query.username
-        }
-      };
+      condition.where.username = query.username;
     }
 
     if (query.nickname) {
-      condition.where = {
-        nickname: {
-          [Op.like]: `%${query.nickname}%`
-        }
+      condition.where.nickname = {
+        [Op.like]: `%${query.nickname}%`
       };
     }
 
     if (query.role) {
-      condition.where = {
-        role: {
-          [Op.eq]: query.role
-        }
-      };
+      condition.where.role = query.role;
     }
 
     const { count, rows } = await User.findAndCountAll(condition);
@@ -64,6 +51,19 @@ router.get('/', async function (req, res) {
         pageSize,
       }
     });
+  } catch (error) {
+    failure(res, error);
+  }
+});
+
+/**
+ * 查询当前登录的用户详情
+ * GET /admin/users/me
+ */
+router.get('/me', async function (req, res) {
+  try {
+    const user = req.user;
+    success(res, '查询当前用户信息成功。', { user });
   } catch (error) {
     failure(res, error);
   }

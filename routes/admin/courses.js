@@ -19,51 +19,32 @@ router.get('/', async function (req, res) {
 
     const condition = {
       ...getCondition(),
+      where: {},
       order: [['id', 'DESC']],
       limit: pageSize,
       offset: offset
     };
 
-
     if (query.categoryId) {
-      condition.where = {
-        categoryId: {
-          [Op.eq]: query.categoryId
-        }
-      };
+      condition.where.categoryId = query.categoryId;
     }
 
     if (query.userId) {
-      condition.where = {
-        userId: {
-          [Op.eq]: query.userId
-        }
-      };
+      condition.where.userId = query.userId;
     }
 
     if (query.name) {
-      condition.where = {
-        name: {
-          [Op.like]: `%${query.name}%`
-        }
+      condition.where.name = {
+        [Op.like]: `%${query.name}%`
       };
     }
 
     if (query.recommended) {
-      condition.where = {
-        recommended: {
-          // 需要转布尔值
-          [Op.eq]: query.recommended === 'true'
-        }
-      };
+      condition.where.recommended = query.recommended === 'true';
     }
 
     if (query.introductory) {
-      condition.where = {
-        introductory: {
-          [Op.eq]: query.introductory === 'true'
-        }
-      };
+      condition.where.introductory = query.introductory === 'true';
     }
 
     const { count, rows } = await Course.findAndCountAll(condition);
@@ -103,7 +84,7 @@ router.post('/', async function (req, res) {
 
     // 获取当前登录的用户 ID
     body.userId = req.user.id;
-    
+
     const course = await Course.create(body);
     success(res, '创建课程成功。', { course }, 201);
   } catch (error) {
