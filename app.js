@@ -9,6 +9,9 @@ require('dotenv').config();
 const indexRouter = require('./routes/front/home');
 const categoriesRouter = require('./routes/front/categories');
 const coursesRouter = require('./routes/front/courses');
+const chaptersRouter = require('./routes/front/chapters');
+const articlesRouter = require('./routes/front/articles');
+const settingsRouter = require('./routes/front/settings');
 
 // 后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
@@ -32,6 +35,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/front/home', indexRouter);
 app.use('/front/categories', categoriesRouter);
 app.use('/front/courses', coursesRouter);
+app.use('/front/chapters', chaptersRouter);
+app.use('/front/articles', articlesRouter);
+app.use('/front/settings', settingsRouter);
 
 // 后台路由配置
 app.use('/admin/articles', adminAuth, adminArticlesRouter);
