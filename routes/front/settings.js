@@ -6,7 +6,7 @@ const { success, failure } = require('../../utils/responses');
 
 /**
  * 查询系统信息
- * GET /settings
+ * GET /front/settings
  */
 router.get('/', async function (req, res) {
   try {

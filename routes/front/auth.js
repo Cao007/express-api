@@ -9,7 +9,7 @@ const { Op } = require("sequelize");
 
 /**
  * 用户注册
- * POST /auth/sign_up
+ * POST /front/auth/sign_up
  */
 router.post('/sign_up', async function (req, res) {
   try {
@@ -33,7 +33,7 @@ router.post('/sign_up', async function (req, res) {
 
 /**
  * 用户登录
- * POST /auth/sign_in
+ * POST /front/auth/sign_in
  */
 router.post('/sign_in', async (req, res) => {
   try {

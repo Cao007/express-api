@@ -6,7 +6,7 @@ const { NotFoundError } = require('../../utils/errors');
 
 /**
  * 点赞、取消赞
- * POST /likes
+ * POST /front/likes
  */
 router.post('/', async function (req, res) {
   try {
@@ -44,7 +44,7 @@ router.post('/', async function (req, res) {
 
 /**
  * 查询用户点赞的课程
- * GET /likes
+ * GET /front/likes
  */
 router.get('/', async function (req, res) {
   try {

@@ -7,7 +7,7 @@ const bcrypt = require('bcryptjs');
 
 /**
  * 查询当前登录用户详情
- * GET /users/me
+ * GET /front/users/me
  */
 router.get('/me', async function (req, res) {
   try {
@@ -20,7 +20,7 @@ router.get('/me', async function (req, res) {
 
 /**
  * 更新用户信息
- * PUT /users/info
+ * PUT /front/users/info
  */
 router.put('/info', async function (req, res) {
   try {
@@ -42,7 +42,7 @@ router.put('/info', async function (req, res) {
 
 /**
  * 更新账户信息
- * PUT /users/account
+ * PUT /front/users/account
  */
 router.put('/account', async function (req, res) {
   try {

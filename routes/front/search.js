@@ -6,7 +6,7 @@ const { Op } = require("sequelize");
 
 /**
  * 搜索课程
- * GET /search
+ * GET /front/search
  */
 router.get('/', async function (req, res) {
   try {

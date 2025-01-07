@@ -6,11 +6,7 @@ const { NotFoundError } = require("../../utils/errors");
 
 /**
  * 查询章节详情
- * GET /chapters/:id
- */
-/**
- * 查询章节详情
- * GET /chapters/:id
+ * GET /front/chapters/:id
  */
 router.get('/:id', async function (req, res) {
   try {

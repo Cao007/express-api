@@ -6,7 +6,7 @@ const { success, failure } = require('../../utils/responses');
 
 /**
  * 查询课程列表
- * GET /courses
+ * GET /front/courses
  */
 router.get('/', async function (req, res) {
   try {
@@ -43,7 +43,7 @@ router.get('/', async function (req, res) {
 
 /**
  * 查询课程详情
- * GET /courses/:id
+ * GET /front/courses/:id
  */
 router.get('/:id', async function (req, res) {
   try {

@@ -6,7 +6,7 @@ const { NotFoundError } = require("../../utils/errors");
 
 /**
  * 查询文章列表
- * GET /articles
+ * GET /front/articles
  */
 router.get('/', async function (req, res) {
   try {
@@ -38,7 +38,7 @@ router.get('/', async function (req, res) {
 
 /**
  * 查询文章详情
- * GET /articles/:id
+ * GET /front/articles/:id
  */
 router.get('/:id', async function (req, res) {
   try {

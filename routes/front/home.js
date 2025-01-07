@@ -5,7 +5,7 @@ const { success, failure } = require('../../utils/responses');
 
 /**
  * 查询首页数据
- * GET /
+ * GET /front/home
  */
 router.get('/', async function (req, res, next) {
   try {

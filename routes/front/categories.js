@@ -5,7 +5,7 @@ const { success, failure } = require('../../utils/responses');
 
 /**
  * 查询分类列表
- * GET /categories
+ * GET /front/categories
  */
 router.get('/', async function (req, res, next) {
   try {
