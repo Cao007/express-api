@@ -2,10 +2,13 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+require('dotenv').config(); // 加载环境变量
+const cors = require('cors')
+
+// 中间件
 const adminAuth = require('./middlewares/admin-auth');
 const userAuth = require('./middlewares/user-auth');
-require('dotenv').config();
-const cors = require('cors')
+
 
 // 前台路由文件
 const indexRouter = require('./routes/front/home');
