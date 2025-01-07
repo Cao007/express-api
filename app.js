@@ -16,6 +16,7 @@ const settingsRouter = require('./routes/front/settings');
 const searchRouter = require('./routes/front/search');
 const authRouter = require('./routes/front/auth');
 const usersRouter = require('./routes/front/users');
+const likesRouter = require('./routes/front/likes');
 
 // 后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
@@ -45,6 +46,7 @@ app.use('/front/settings', settingsRouter);
 app.use('/front/search', searchRouter);
 app.use('/front/auth', authRouter);
 app.use('/front/users', userAuth, usersRouter);
+app.use('/front/likes', userAuth, likesRouter);
 
 // 后台路由配置
 app.use('/admin/articles', adminAuth, adminArticlesRouter);
