@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Course } = require('../../models');
+const { Course, Category, Chapter, User } = require('../../models');
 const { Op } = require('sequelize');
 const { success, failure } = require('../../utils/responses');
 
@@ -36,6 +36,46 @@ router.get('/', async function (req, res) {
         pageSize,
       }
     });
+  } catch (error) {
+    failure(res, error);
+  }
+});
+
+/**
+ * 查询课程详情
+ * GET /courses/:id
+ */
+router.get('/:id', async function (req, res) {
+  try {
+    const { id } = req.params;
+    const condition = {
+      attributes: { exclude: ['CategoryId', 'UserId'] },
+      include: [
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Chapter,
+          as: 'chapters',
+          attributes: ['id', 'title', 'rank', 'createdAt'],
+          order: [['rank', 'ASC'], ['id', 'DESC']]
+        },
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'username', 'nickname', 'avatar', 'company']
+        }
+      ]
+    };
+
+    const course = await Course.findByPk(id, condition);
+    if (!course) {
+      throw new NotFoundError(`ID: ${id}的课程未找到。`)
+    }
+
+    success(res, '查询课程成功。', { course });
   } catch (error) {
     failure(res, error);
   }
