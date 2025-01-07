@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const adminAuth = require('./middlewares/admin-auth');
+const userAuth = require('./middlewares/user-auth');
 require('dotenv').config();
 
 // 前台路由文件
@@ -12,6 +13,9 @@ const coursesRouter = require('./routes/front/courses');
 const chaptersRouter = require('./routes/front/chapters');
 const articlesRouter = require('./routes/front/articles');
 const settingsRouter = require('./routes/front/settings');
+const searchRouter = require('./routes/front/search');
+const authRouter = require('./routes/front/auth');
+const usersRouter = require('./routes/front/users');
 
 // 后台路由文件
 const adminArticlesRouter = require('./routes/admin/articles');
@@ -38,6 +42,9 @@ app.use('/front/courses', coursesRouter);
 app.use('/front/chapters', chaptersRouter);
 app.use('/front/articles', articlesRouter);
 app.use('/front/settings', settingsRouter);
+app.use('/front/search', searchRouter);
+app.use('/front/auth', authRouter);
+app.use('/front/users', userAuth, usersRouter);
 
 // 后台路由配置
 app.use('/admin/articles', adminAuth, adminArticlesRouter);
