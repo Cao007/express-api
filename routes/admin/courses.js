@@ -135,6 +135,7 @@ router.delete('/:id', async function (req, res) {
  */
 function getCondition() {
   return {
+    distinct: true, // 防止重复数据,Sequelize一对多查询的bug
     attributes: { exclude: ['CategoryId', 'UserId'] },
     include: [
       {
