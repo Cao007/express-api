@@ -7,14 +7,18 @@
 NODE_ENV=development
 PORT=3000
 SECRET=你的秘钥
+
+ALIYUN_ACCESS_KEY_ID=阿里云的 AccessKey ID
+ALIYUN_ACCESS_KEY_SECRET=阿里云的 AccessKey Secret
+ALIYUN_BUCKET=阿里云 OSS 的 Bucket 名称
+ALIYUN_REGION=阿里云 OSS Bucket 所在地域名称
 ```
 
 - `NODE_ENV`配置为开发环境，如部署在生产环境可改为`production`。
 - `PORT`配置为服务端口
 - `SECRET`配置为秘钥。
+- `ALIYUN`开头的配置，均为阿里云的配置。请注册阿里云云账号，创建存储空间，并创建`Access Key`。
 
-
-其中`PORT`配置为服务端口，`SECRET`配置为秘钥。
 
 ## 生成秘钥
 

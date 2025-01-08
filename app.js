@@ -32,6 +32,9 @@ const adminChaptersRouter = require('./routes/admin/chapters');
 const adminChartsRouter = require('./routes/admin/charts');
 const adminAuthRouter = require('./routes/admin/auth');
 
+// 公共路由文件
+const uploadsRouter = require('./routes/common/uploads');
+
 const app = express();
 
 app.use(logger('dev'));
@@ -69,5 +72,8 @@ app.use('/admin/courses', adminAuth, adminCoursesRouter);
 app.use('/admin/chapters', adminAuth, adminChaptersRouter);
 app.use('/admin/charts', adminAuth, adminChartsRouter);
 app.use('/admin/auth', adminAuthRouter);
+
+// 公共路由配置
+app.use('/common/uploads', userAuth, uploadsRouter);
 
 module.exports = app;
