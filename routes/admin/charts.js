@@ -10,9 +10,11 @@ const { success, failure } = require('../../utils/responses');
  */
 router.get('/gender', async function (req, res) {
   try {
-    const male = await User.count({ where: { gender: 0 } });
-    const female = await User.count({ where: { gender: 1 } });
-    const unknown = await User.count({ where: { gender: 2 } });
+    const [male, female, unknown] = await Promise.all([
+      User.count({ where: { gender: 0 } }),
+      User.count({ where: { gender: 1 } }),
+      User.count({ where: { gender: 2 } })
+    ]);
 
     // 处理数据为echarts格式
     const data = [
