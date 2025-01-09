@@ -24,6 +24,14 @@ router.get('/', async function (req, res) {
       offset: offset
     };
 
+    // 查询被软删除的数据
+    if (query.deleted === 'true') {
+      condition.paranoid = false;
+      condition.where.deletedAt = {
+        [Op.not]: null
+      }
+    }
+
     if (query.title) {
       condition.where.title = {
         [Op.like]: `%${query.title}%`
@@ -89,15 +97,48 @@ router.put('/:id', async function (req, res) {
 });
 
 /**
- * 删除文章
- * DELETE /admin/articles/:id
+ * 删除到回收站
+ * POST /admin/articles/delete
  */
-router.delete('/:id', async function (req, res) {
+router.post('/delete', async function (req, res) {
   try {
-    const article = await getArticle(req);
+    const { id } = req.body;
 
-    await article.destroy();
-    success(res, '删除文章成功。');
+    await Article.destroy({ where: { id: id } });
+    success(res, '已删除到回收站。');
+  } catch (error) {
+    failure(res, error);
+  }
+});
+
+/**
+ * 从回收站恢复
+ * POST /admin/articles/restore
+ */
+router.post('/restore', async function (req, res) {
+  try {
+    const { id } = req.body;
+
+    await Article.restore({ where: { id: id } });
+    success(res, '已恢复成功。')
+  } catch (error) {
+    failure(res, error);
+  }
+});
+
+/**
+ * 彻底删除
+ * POST /admin/articles/force_delete
+ */
+router.post('/force_delete', async function (req, res,) {
+  try {
+    const { id } = req.body;
+
+    await Article.destroy({
+      where: { id: id },
+      force: true
+    });
+    success(res, '已彻底删除。');
   } catch (error) {
     failure(res, error);
   }
