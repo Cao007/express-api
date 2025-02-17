@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require('uuid');
 const moment = require('moment');
 
 /**
- * 阿里云 OSS 客户端上传
+ * 服务器代理上传
  * POST /common/uploads/aliyun
  */
 router.post('/aliyun', function (req, res) {
@@ -37,7 +37,7 @@ router.post('/aliyun', function (req, res) {
 })
 
 /**
- * 获取直传阿里云 OSS 授权信息
+ * 客户端直传，获取直传阿里云 OSS 授权信息
  * GET /common/uploads/aliyun_direct
  */
 router.get('/aliyun_direct', async function (req, res, next) {
