@@ -3,6 +3,7 @@ const router = express.Router();
 const { Article } = require('../../models');
 const { success, failure } = require('../../utils/responses');
 const { NotFound } = require('http-errors');
+const { setKey, getKey } = require('../../utils/redis');
 
 /**
  * 查询文章列表
@@ -15,6 +16,13 @@ router.get('/', async function (req, res) {
     const pageSize = Math.abs(Number(query.pageSize)) || 10;
     const offset = (currentPage - 1) * pageSize;
 
+    // 1.定义带有「当前页码」和「每页条数」的 cacheKey 作为缓存的键
+    const cacheKey = `articles:${currentPage}:${pageSize}`;
+    let data = await getKey(cacheKey);
+    if (data) {
+      return success(res, '查询文章列表成功。', data);
+    }
+
     const condition = {
       attributes: { exclude: ['content'] },
       order: [['id', 'DESC']],
@@ -23,14 +31,17 @@ router.get('/', async function (req, res) {
     };
 
     const { count, rows } = await Article.findAndCountAll(condition);
-    success(res, '查询文章列表成功。', {
+    data = {
       articles: rows,
       pagination: {
         total: count,
         currentPage,
         pageSize,
       }
-    });
+    }
+    await setKey(cacheKey, data);
+
+    success(res, '查询文章列表成功。', data);
   } catch (error) {
     failure(res, error);
   }

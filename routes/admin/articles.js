@@ -4,7 +4,7 @@ const { Article } = require('../../models');
 const { Op } = require('sequelize');
 const { NotFound } = require('http-errors');
 const { success, failure } = require('../../utils/responses');
-
+const { getKeysByPattern, delKey } = require('../../utils/redis');
 
 /**
  * 查询文章列表
@@ -90,6 +90,9 @@ router.put('/:id', async function (req, res) {
     const body = filterBody(req);
 
     await article.update(body);
+
+    await clearCache();
+
     success(res, '更新文章成功。', { article });
   } catch (error) {
     failure(res, error);
@@ -143,6 +146,19 @@ router.post('/force_delete', async function (req, res,) {
     failure(res, error);
   }
 });
+
+/**
+ * 公共方法：清除缓存
+ * @returns {Promise<void>}
+ */
+async function clearCache() {
+  // 清除所有文章列表缓存
+  const keys = await getKeysByPattern('articles:*');
+
+  if (keys.length !== 0) {
+    await delKey(keys);
+  }
+}
 
 /**
  * 公共方法：查询当前文章
