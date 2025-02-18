@@ -25,6 +25,8 @@ const setKey = async (key, value, ttl = null) => {
   value = JSON.stringify(value); // 将对象转换为JSON字符串
   await client.set(key, value);
 
+  console.log('key:', key, 'with TTL:', ttl);
+
   // 如果提供了ttl，则设置过期时间
   if (ttl !== null) {
     await client.expire(key, ttl);
