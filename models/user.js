@@ -78,6 +78,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     gender: {
       type: DataTypes.TINYINT,
+      defaultValue: 2,
       validate: {
         notEmpty: { msg: '性别不能为空。' },
         isIn: { args: [[0, 1, 2]], msg: '性别的值必须是，男性：0 女性：1 未选择：2。' }
