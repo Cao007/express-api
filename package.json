@@ -23,6 +23,7 @@
     "nodemon": "^3.1.9",
     "redis": "^4.7.0",
     "sequelize": "^6.37.5",
+    "svg-captcha": "^1.4.0",
     "uuid": "^11.0.4"
   }
 }

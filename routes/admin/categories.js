@@ -4,7 +4,7 @@ const { Category, Course } = require('../../models');
 const { Op } = require('sequelize');
 const { NotFound, Conflict } = require('http-errors');
 const { success, failure } = require('../../utils/responses');
-
+const { delKey } = require('../../utils/redis');
 
 /**
  * 查询分类列表
@@ -56,6 +56,9 @@ router.post('/', async function (req, res) {
     const body = filterBody(req);
 
     const category = await Category.create(body);
+
+    await clearCache(); // 删除缓存
+
     success(res, '创建分类成功。', { category }, 201);
   } catch (error) {
     failure(res, error);
@@ -72,6 +75,9 @@ router.put('/:id', async function (req, res) {
     const body = filterBody(req);
 
     await category.update(body);
+
+    await clearCache(); // 删除缓存
+
     success(res, '更新分类成功。', { category });
   } catch (error) {
     failure(res, error);
@@ -93,11 +99,21 @@ router.delete('/:id', async function (req, res) {
     }
 
     await category.destroy();
+    
+    await clearCache(); // 删除缓存
+
     success(res, '删除分类成功。');
   } catch (error) {
     failure(res, error);
   }
 });
+
+/**
+ * 公共方法：删除缓存
+ */
+async function clearCache() {
+  await delKey('categories');
+}
 
 /**
  * 公共方法：查询当前分类
