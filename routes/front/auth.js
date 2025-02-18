@@ -6,12 +6,14 @@ const { NotFound, BadRequest, Unauthorized } = require('http-errors');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { Op } = require("sequelize");
+const validateCaptcha = require('../../middlewares/validate-captcha');
+const { delKey } = require('../../utils/redis');
 
 /**
  * 用户注册
  * POST /front/auth/sign_up
  */
-router.post('/sign_up', async function (req, res) {
+router.post('/sign_up', validateCaptcha, async function (req, res) {
   try {
     const body = {
       email: req.body.email,
@@ -24,6 +26,9 @@ router.post('/sign_up', async function (req, res) {
 
     const user = await User.create(body);
     delete user.dataValues.password; // 删除密码字段
+
+    // 请求成功，删除验证码，防止在有效期内重复使用
+    await delKey(req.body.captchaKey);
 
     success(res, '创建用户成功。', { user }, 201);
   } catch (error) {

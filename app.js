@@ -35,6 +35,7 @@ const adminAttachmentsRouter = require('./routes/admin/attachments');
 
 // 公共路由文件
 const uploadsRouter = require('./routes/common/uploads');
+const captchaRouter = require('./routes/common/captcha');
 
 const app = express();
 
@@ -47,7 +48,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 const corsOptions = {
   origin: [
     'https://clwy.cn',
-    'http://localhost:5500'
+    'http://localhost:5500',
+    'http://127.0.0.1:5500'
   ],
 }
 app.use(cors(corsOptions));
@@ -77,5 +79,6 @@ app.use('/admin/attachments', adminAuth, adminAttachmentsRouter);
 
 // 公共路由配置
 app.use('/common/uploads', userAuth, uploadsRouter);
+app.use('/common/captcha', captchaRouter);
 
 module.exports = app;
