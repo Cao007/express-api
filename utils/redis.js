@@ -64,4 +64,13 @@ const getKeysByPattern = async (pattern) => {
   return await client.keys(pattern);
 }
 
-module.exports = { redisClient, setKey, getKey, delKey, getKeysByPattern };
+/**
+ * 清空所有缓存数据
+ * @returns {Promise<void>}
+ */
+const flushAll = async () => {
+  if (!client) await redisClient();
+  await client.flushAll();
+}
+
+module.exports = { redisClient, setKey, getKey, delKey, getKeysByPattern, flushAll };
