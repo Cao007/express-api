@@ -1,19 +1,19 @@
-const { createClient } = require('redis');
-const logger = require('./logger');
+const { createClient } = require('redis')
+const logger = require('./logger')
 
 // 创建全局的 Redis 客户端实例
-let client;
+let client
 
 /**
  * 初始化 Redis 客户端
  */
 const redisClient = async () => {
-  if (client) return; // 如果客户端已经初始化，则不再重复初始化
+  if (client) return // 如果客户端已经初始化，则不再重复初始化
 
   client = await createClient()
-    .on('error', err => logger.error('Redis 连接失败：', err))
-    .connect();
-};
+    .on('error', (err) => logger.error('Redis 连接失败：', err))
+    .connect()
+}
 
 /**
  * 存入数组或对象，并可选地设置过期时间
@@ -22,15 +22,15 @@ const redisClient = async () => {
  * @param ttl 可选，以秒为单位的过期时间，默认不设置
  */
 const setKey = async (key, value, ttl = null) => {
-  if (!client) await redisClient(); // 确保客户端已初始化
-  value = JSON.stringify(value); // 将对象转换为JSON字符串
-  await client.set(key, value);
+  if (!client) await redisClient() // 确保客户端已初始化
+  value = JSON.stringify(value) // 将对象转换为JSON字符串
+  await client.set(key, value)
 
   // 如果提供了ttl，则设置过期时间
   if (ttl !== null) {
-    await client.expire(key, ttl);
+    await client.expire(key, ttl)
   }
-};
+}
 
 /**
  * 读取数组或对象
@@ -38,10 +38,10 @@ const setKey = async (key, value, ttl = null) => {
  * @returns {Promise<any>} 解析后的JSON对象或数组
  */
 const getKey = async (key) => {
-  if (!client) await redisClient(); // 确保客户端已初始化
-  const value = await client.get(key); // 将获取到的JSON字符串转换回对象
-  return value ? JSON.parse(value) : null; // 如果value为空，返回null而不是抛出错误
-};
+  if (!client) await redisClient() // 确保客户端已初始化
+  const value = await client.get(key) // 将获取到的JSON字符串转换回对象
+  return value ? JSON.parse(value) : null // 如果value为空，返回null而不是抛出错误
+}
 
 /**
  * 清除缓存数据
@@ -49,9 +49,9 @@ const getKey = async (key) => {
  * @returns {Promise<void>}
  */
 const delKey = async (key) => {
-  if (!client) await redisClient(); // 确保客户端已初始化
-  await client.del(key);
-};
+  if (!client) await redisClient() // 确保客户端已初始化
+  await client.del(key)
+}
 
 /**
  * 获取匹配模式的所有键名
@@ -59,8 +59,8 @@ const delKey = async (key) => {
  * @returns {Promise<*>}
  */
 const getKeysByPattern = async (pattern) => {
-  if (!client) await redisClient();
-  return await client.keys(pattern);
+  if (!client) await redisClient()
+  return await client.keys(pattern)
 }
 
 /**
@@ -68,8 +68,8 @@ const getKeysByPattern = async (pattern) => {
  * @returns {Promise<void>}
  */
 const flushAll = async () => {
-  if (!client) await redisClient();
-  await client.flushAll();
+  if (!client) await redisClient()
+  await client.flushAll()
 }
 
-module.exports = { redisClient, setKey, getKey, delKey, getKeysByPattern, flushAll };
+module.exports = { redisClient, setKey, getKey, delKey, getKeysByPattern, flushAll }

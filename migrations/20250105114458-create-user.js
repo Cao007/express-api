@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -49,24 +49,21 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-    await queryInterface.addIndex(
-      'Users', {
-      fields: ['email'],  // 要索引的字段
-      unique: true        // 唯一索引
-    });
-    await queryInterface.addIndex(
-      'Users', {
+    })
+    await queryInterface.addIndex('Users', {
+      fields: ['email'], // 要索引的字段
+      unique: true // 唯一索引
+    })
+    await queryInterface.addIndex('Users', {
       fields: ['username'],
       unique: true
-    });
-    await queryInterface.addIndex(
-      'Users', {
+    })
+    await queryInterface.addIndex('Users', {
       fields: ['role']
-    });
+    })
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Users');
+    await queryInterface.dropTable('Users')
   }
-};
+}

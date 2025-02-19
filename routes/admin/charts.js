@@ -1,8 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const { sequelize, User } = require('../../models');
-const { success, failure } = require('../../utils/responses');
-
+const express = require('express')
+const router = express.Router()
+const { sequelize, User } = require('../../models')
+const { success, failure } = require('../../utils/responses')
 
 /**
  * 统计用户性别
@@ -14,20 +13,20 @@ router.get('/gender', async function (req, res) {
       User.count({ where: { gender: 0 } }),
       User.count({ where: { gender: 1 } }),
       User.count({ where: { gender: 2 } })
-    ]);
+    ])
 
     // 处理数据为echarts格式
     const data = [
       { value: male, name: '男性' },
       { value: female, name: '女性' },
       { value: unknown, name: '未选择' }
-    ];
+    ]
 
-    success(res, '查询用户性别成功。', { data });
+    success(res, '查询用户性别成功。', { data })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 统计每个月用户数量
@@ -35,22 +34,24 @@ router.get('/gender', async function (req, res) {
  */
 router.get('/user', async (req, res) => {
   try {
-    const [results] = await sequelize.query("SELECT DATE_FORMAT(`createdAt`, '%Y-%m') AS `month`, COUNT(*) AS `value` FROM `Users` GROUP BY `month` ORDER BY `month` ASC");
+    const [results] = await sequelize.query(
+      "SELECT DATE_FORMAT(`createdAt`, '%Y-%m') AS `month`, COUNT(*) AS `value` FROM `Users` GROUP BY `month` ORDER BY `month` ASC"
+    )
 
     // 处理数据为echarts格式
     const data = {
       months: [],
-      values: [],
-    };
-    results.forEach(item => {
-      data.months.push(item.month);
-      data.values.push(item.value);
-    });
+      values: []
+    }
+    results.forEach((item) => {
+      data.months.push(item.month)
+      data.values.push(item.value)
+    })
 
-    success(res, '查询每月用户数量成功。', { data });
+    success(res, '查询每月用户数量成功。', { data })
   } catch (err) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
-module.exports = router;
+module.exports = router

@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
@@ -25,18 +25,16 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       }
-    });
-    await queryInterface.addIndex(
-      'Likes', {
+    })
+    await queryInterface.addIndex('Likes', {
       fields: ['courseId']
-    });
-    await queryInterface.addIndex(
-      'Likes', {
+    })
+    await queryInterface.addIndex('Likes', {
       fields: ['userId']
-    });
+    })
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Likes');
+    await queryInterface.dropTable('Likes')
   }
-};
+}

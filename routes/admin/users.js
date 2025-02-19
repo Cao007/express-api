@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { User } = require('../../models');
-const { Op } = require('sequelize');
-const { NotFound } = require('http-errors');
-const { success, failure } = require('../../utils/responses');
-const { delKey } = require('../../utils/redis');
+const express = require('express')
+const router = express.Router()
+const { User } = require('../../models')
+const { Op } = require('sequelize')
+const { NotFound } = require('http-errors')
+const { success, failure } = require('../../utils/responses')
+const { delKey } = require('../../utils/redis')
 
 /**
  * 查询用户列表
@@ -12,49 +12,49 @@ const { delKey } = require('../../utils/redis');
  */
 router.get('/', async function (req, res) {
   try {
-    const query = req.query;
-    const currentPage = Math.abs(Number(query.currentPage)) || 1;
-    const pageSize = Math.abs(Number(query.pageSize)) || 10;
-    const offset = (currentPage - 1) * pageSize;
+    const query = req.query
+    const currentPage = Math.abs(Number(query.currentPage)) || 1
+    const pageSize = Math.abs(Number(query.pageSize)) || 10
+    const offset = (currentPage - 1) * pageSize
 
     const condition = {
       where: {},
       order: [['id', 'DESC']],
       limit: pageSize,
       offset: offset
-    };
+    }
 
     if (query.email) {
-      condition.where.email = query.email;
+      condition.where.email = query.email
     }
 
     if (query.username) {
-      condition.where.username = query.username;
+      condition.where.username = query.username
     }
 
     if (query.nickname) {
       condition.where.nickname = {
         [Op.like]: `%${query.nickname}%`
-      };
+      }
     }
 
     if (query.role) {
-      condition.where.role = query.role;
+      condition.where.role = query.role
     }
 
-    const { count, rows } = await User.findAndCountAll(condition);
+    const { count, rows } = await User.findAndCountAll(condition)
     success(res, '查询用户列表成功。', {
       users: rows,
       pagination: {
         total: count,
         currentPage,
-        pageSize,
+        pageSize
       }
-    });
+    })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 查询当前登录的用户详情
@@ -63,12 +63,12 @@ router.get('/', async function (req, res) {
 router.get('/me', async function (req, res) {
   try {
     // 登录成功后，获取挂在到req上的user对象
-    const user = req.user;
-    success(res, '查询当前用户信息成功。', { user });
+    const user = req.user
+    success(res, '查询当前用户信息成功。', { user })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 查询用户详情
@@ -76,12 +76,12 @@ router.get('/me', async function (req, res) {
  */
 router.get('/:id', async function (req, res) {
   try {
-    const user = await getUser(req);
-    success(res, '查询用户成功。', { user });
+    const user = await getUser(req)
+    success(res, '查询用户成功。', { user })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 创建用户
@@ -89,17 +89,17 @@ router.get('/:id', async function (req, res) {
  */
 router.post('/', async function (req, res) {
   try {
-    const body = filterBody(req);
+    const body = filterBody(req)
 
-    const user = await User.create(body);
+    const user = await User.create(body)
 
-    await clearCache(user);
+    await clearCache(user)
 
-    success(res, '创建用户成功。', { user }, 201);
+    success(res, '创建用户成功。', { user }, 201)
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 更新用户
@@ -107,39 +107,39 @@ router.post('/', async function (req, res) {
  */
 router.put('/:id', async function (req, res) {
   try {
-    const user = await getUser(req);
-    const body = filterBody(req);
+    const user = await getUser(req)
+    const body = filterBody(req)
 
-    await user.update(body);
+    await user.update(body)
 
-    await clearCache(user);
+    await clearCache(user)
 
-    success(res, '更新用户成功。', { user });
+    success(res, '更新用户成功。', { user })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 公共方法：清除缓存
  * @param user
  */
 async function clearCache(user) {
-  await delKey(`user:${user.id}`);
+  await delKey(`user:${user.id}`)
 }
 
 /**
  * 公共方法：查询当前用户
  */
 async function getUser(req) {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const user = await User.findByPk(id);
+  const user = await User.findByPk(id)
   if (!user) {
     throw new NotFound(`ID: ${id}的用户未找到。`)
   }
 
-  return user;
+  return user
 }
 
 /**
@@ -158,7 +158,7 @@ function filterBody(req) {
     introduce: req.body.introduce,
     role: req.body.role,
     avatar: req.body.avatar
-  };
+  }
 }
 
-module.exports = router;
+module.exports = router

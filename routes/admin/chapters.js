@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { Chapter, Course } = require('../../models');
-const { Op } = require('sequelize');
-const { NotFound, BadRequest } = require('http-errors');
-const { success, failure } = require('../../utils/responses');
-const { delKey } = require('../../utils/redis');
+const express = require('express')
+const router = express.Router()
+const { Chapter, Course } = require('../../models')
+const { Op } = require('sequelize')
+const { NotFound, BadRequest } = require('http-errors')
+const { success, failure } = require('../../utils/responses')
+const { delKey } = require('../../utils/redis')
 
 /**
  * 查询章节列表
@@ -12,44 +12,47 @@ const { delKey } = require('../../utils/redis');
  */
 router.get('/', async function (req, res) {
   try {
-    const query = req.query;
-    const currentPage = Math.abs(Number(query.currentPage)) || 1;
-    const pageSize = Math.abs(Number(query.pageSize)) || 10;
-    const offset = (currentPage - 1) * pageSize;
+    const query = req.query
+    const currentPage = Math.abs(Number(query.currentPage)) || 1
+    const pageSize = Math.abs(Number(query.pageSize)) || 10
+    const offset = (currentPage - 1) * pageSize
 
     if (!query.courseId) {
-      throw new BadRequest('获取章节列表失败，课程ID不能为空。');
+      throw new BadRequest('获取章节列表失败，课程ID不能为空。')
     }
 
     const condition = {
       ...getCondition(),
       where: {},
-      order: [['rank', 'ASC'], ['id', 'ASC']],
+      order: [
+        ['rank', 'ASC'],
+        ['id', 'ASC']
+      ],
       limit: pageSize,
       offset: offset
-    };
+    }
 
-    condition.where.courseId = query.courseId;
+    condition.where.courseId = query.courseId
 
     if (query.title) {
       condition.where.title = {
         [Op.like]: `%${query.title}%`
-      };
+      }
     }
 
-    const { count, rows } = await Chapter.findAndCountAll(condition);
+    const { count, rows } = await Chapter.findAndCountAll(condition)
     success(res, '查询章节列表成功。', {
       chapters: rows,
       pagination: {
         total: count,
         currentPage,
-        pageSize,
+        pageSize
       }
-    });
+    })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 查询章节详情
@@ -57,12 +60,12 @@ router.get('/', async function (req, res) {
  */
 router.get('/:id', async function (req, res) {
   try {
-    const chapter = await getChapter(req);
-    success(res, '查询章节成功。', { chapter });
+    const chapter = await getChapter(req)
+    success(res, '查询章节成功。', { chapter })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 创建章节
@@ -70,20 +73,19 @@ router.get('/:id', async function (req, res) {
  */
 router.post('/', async function (req, res) {
   try {
-    const body = filterBody(req);
-
+    const body = filterBody(req)
 
     // 创建章节，并增加课程章节数
-    const chapter = await Chapter.create(body);
-    await Course.increment('chaptersCount', { where: { id: chapter.courseId } });
+    const chapter = await Chapter.create(body)
+    await Course.increment('chaptersCount', { where: { id: chapter.courseId } })
 
-    await clearCache(chapter);
+    await clearCache(chapter)
 
-    success(res, '创建章节成功。', { chapter }, 201);
+    success(res, '创建章节成功。', { chapter }, 201)
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 更新章节
@@ -91,18 +93,18 @@ router.post('/', async function (req, res) {
  */
 router.put('/:id', async function (req, res) {
   try {
-    const chapter = await getChapter(req);
-    const body = filterBody(req);
+    const chapter = await getChapter(req)
+    const body = filterBody(req)
 
-    await chapter.update(body);
+    await chapter.update(body)
 
-    await clearCache(chapter);
+    await clearCache(chapter)
 
-    success(res, '更新章节成功。', { chapter });
+    success(res, '更新章节成功。', { chapter })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 删除章节
@@ -110,19 +112,19 @@ router.put('/:id', async function (req, res) {
  */
 router.delete('/:id', async function (req, res) {
   try {
-    const chapter = await getChapter(req);
+    const chapter = await getChapter(req)
 
     // 删除章节，并减少课程章节数
-    await chapter.destroy();
-    await Course.decrement('chaptersCount', { where: { id: chapter.courseId } });
+    await chapter.destroy()
+    await Course.decrement('chaptersCount', { where: { id: chapter.courseId } })
 
-    await clearCache(chapter);
+    await clearCache(chapter)
 
-    success(res, '删除章节成功。');
+    success(res, '删除章节成功。')
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 公共方法：清除缓存
@@ -130,8 +132,8 @@ router.delete('/:id', async function (req, res) {
  * @returns {Promise<void>}
  */
 async function clearCache(chapter) {
-  await delKey(`chapters:${chapter.courseId}`);
-  await delKey(`chapter:${chapter.id}`);
+  await delKey(`chapters:${chapter.courseId}`)
+  await delKey(`chapter:${chapter.id}`)
 }
 
 /**
@@ -151,20 +153,19 @@ function getCondition() {
   }
 }
 
-
 /**
  * 公共方法：查询当前章节
  */
 async function getChapter(req) {
-  const { id } = req.params;
-  const condition = getCondition();
+  const { id } = req.params
+  const condition = getCondition()
 
-  const chapter = await Chapter.findByPk(id, condition);
+  const chapter = await Chapter.findByPk(id, condition)
   if (!chapter) {
     throw new NotFound(`ID: ${id}的章节未找到。`)
   }
 
-  return chapter;
+  return chapter
 }
 
 /**
@@ -179,7 +180,7 @@ function filterBody(req) {
     content: req.body.content,
     video: req.body.video,
     rank: req.body.rank
-  };
+  }
 }
 
-module.exports = router;
+module.exports = router

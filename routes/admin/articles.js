@@ -1,10 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { Article } = require('../../models');
-const { Op } = require('sequelize');
-const { NotFound } = require('http-errors');
-const { success, failure } = require('../../utils/responses');
-const { getKeysByPattern, delKey } = require('../../utils/redis');
+const express = require('express')
+const router = express.Router()
+const { Article } = require('../../models')
+const { Op } = require('sequelize')
+const { NotFound } = require('http-errors')
+const { success, failure } = require('../../utils/responses')
+const { getKeysByPattern, delKey } = require('../../utils/redis')
 
 /**
  * 查询文章列表
@@ -12,21 +12,21 @@ const { getKeysByPattern, delKey } = require('../../utils/redis');
  */
 router.get('/', async function (req, res) {
   try {
-    const query = req.query;
-    const currentPage = Math.abs(Number(query.currentPage)) || 1;
-    const pageSize = Math.abs(Number(query.pageSize)) || 10;
-    const offset = (currentPage - 1) * pageSize;
+    const query = req.query
+    const currentPage = Math.abs(Number(query.currentPage)) || 1
+    const pageSize = Math.abs(Number(query.pageSize)) || 10
+    const offset = (currentPage - 1) * pageSize
 
     const condition = {
       where: {},
       order: [['id', 'DESC']],
       limit: pageSize,
       offset: offset
-    };
+    }
 
     // 查询被软删除的数据
     if (query.deleted === 'true') {
-      condition.paranoid = false;
+      condition.paranoid = false
       condition.where.deletedAt = {
         [Op.not]: null
       }
@@ -35,22 +35,22 @@ router.get('/', async function (req, res) {
     if (query.title) {
       condition.where.title = {
         [Op.like]: `%${query.title}%`
-      };
+      }
     }
 
-    const { count, rows } = await Article.findAndCountAll(condition);
+    const { count, rows } = await Article.findAndCountAll(condition)
     success(res, '查询文章列表成功。', {
       articles: rows,
       pagination: {
         total: count,
         currentPage,
-        pageSize,
+        pageSize
       }
-    });
+    })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 查询文章详情
@@ -58,12 +58,12 @@ router.get('/', async function (req, res) {
  */
 router.get('/:id', async function (req, res) {
   try {
-    const article = await getArticle(req);
-    success(res, '查询文章成功。', { article });
+    const article = await getArticle(req)
+    success(res, '查询文章成功。', { article })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 创建文章
@@ -71,17 +71,17 @@ router.get('/:id', async function (req, res) {
  */
 router.post('/', async function (req, res) {
   try {
-    const body = filterBody(req);
+    const body = filterBody(req)
 
-    const article = await Article.create(body);
+    const article = await Article.create(body)
 
-    await clearCache();
+    await clearCache()
 
-    success(res, '创建文章成功。', { article }, 201);
+    success(res, '创建文章成功。', { article }, 201)
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 更新文章
@@ -89,18 +89,18 @@ router.post('/', async function (req, res) {
  */
 router.put('/:id', async function (req, res) {
   try {
-    const article = await getArticle(req);
-    const body = filterBody(req);
+    const article = await getArticle(req)
+    const body = filterBody(req)
 
-    await article.update(body);
+    await article.update(body)
 
-    await clearCache(article.id);
+    await clearCache(article.id)
 
-    success(res, '更新文章成功。', { article });
+    success(res, '更新文章成功。', { article })
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 删除到回收站
@@ -108,17 +108,17 @@ router.put('/:id', async function (req, res) {
  */
 router.post('/delete', async function (req, res) {
   try {
-    const { id } = req.body;
+    const { id } = req.body
 
-    await Article.destroy({ where: { id: id } });
+    await Article.destroy({ where: { id: id } })
 
-    await clearCache(id);
+    await clearCache(id)
 
-    success(res, '已删除到回收站。');
+    success(res, '已删除到回收站。')
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 从回收站恢复
@@ -126,38 +126,38 @@ router.post('/delete', async function (req, res) {
  */
 router.post('/restore', async function (req, res) {
   try {
-    const { id } = req.body;
+    const { id } = req.body
 
-    await Article.restore({ where: { id: id } });
+    await Article.restore({ where: { id: id } })
 
-    await clearCache(id);
+    await clearCache(id)
 
     success(res, '已恢复成功。')
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 彻底删除
  * POST /admin/articles/force_delete
  */
-router.post('/force_delete', async function (req, res,) {
+router.post('/force_delete', async function (req, res) {
   try {
-    const { id } = req.body;
+    const { id } = req.body
 
     await Article.destroy({
       where: { id: id },
       force: true
-    });
+    })
 
-    await clearCache(id);
+    await clearCache(id)
 
-    success(res, '已彻底删除。');
+    success(res, '已彻底删除。')
   } catch (error) {
-    failure(res, error);
+    failure(res, error)
   }
-});
+})
 
 /**
  * 公共方法：清除缓存
@@ -165,16 +165,16 @@ router.post('/force_delete', async function (req, res,) {
  */
 async function clearCache(id = null) {
   // 清除所有文章列表缓存
-  let keys = await getKeysByPattern('articles:*');
+  let keys = await getKeysByPattern('articles:*')
   if (keys.length !== 0) {
-    await delKey(keys);
+    await delKey(keys)
   }
 
   // 如果传递了id，则通过id清除文章详情缓存
   if (id) {
     // 如果是数组，则遍历
-    const keys = Array.isArray(id) ? id.map(item => `article:${item}`) : `article:${id}`;
-    await delKey(keys);
+    const keys = Array.isArray(id) ? id.map((item) => `article:${item}`) : `article:${id}`
+    await delKey(keys)
   }
 }
 
@@ -182,14 +182,14 @@ async function clearCache(id = null) {
  * 公共方法：查询当前文章
  */
 async function getArticle(req) {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const article = await Article.findByPk(id);
+  const article = await Article.findByPk(id)
   if (!article) {
     throw new NotFound(`ID: ${id}的文章未找到。`)
   }
 
-  return article;
+  return article
 }
 
 /**
@@ -201,7 +201,7 @@ function filterBody(req) {
   return {
     title: req.body.title,
     content: req.body.content
-  };
+  }
 }
 
-module.exports = router;
+module.exports = router
