@@ -21,12 +21,16 @@ const transporter = nodemailer.createTransport({
  * @returns {Promise<void>}
  */
 const sendMail = async (email, subject, html) => {
-  await transporter.sendMail({
-    from: process.env.MAILER_USER,
-    to: email,
-    subject,
-    html,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.MAILER_USER,
+      to: email,
+      subject,
+      html,
+    });
+  } catch (e) {
+    console.log('邮件发送失败', e);
+  }
 }
 
 module.exports = sendMail;

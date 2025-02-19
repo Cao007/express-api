@@ -4,6 +4,12 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 require('dotenv').config(); // 加载环境变量
 const cors = require('cors')
+// 启动邮件消费者
+const { mailConsumer } = require('./utils/rabbit-mq');
+(async () => {
+  await mailConsumer();
+  console.log('邮件消费者已启动');
+})();
 
 // 中间件
 const adminAuth = require('./middlewares/admin-auth');
