@@ -1,4 +1,5 @@
 const { createClient } = require('redis');
+const logger = require('./logger');
 
 // 创建全局的 Redis 客户端实例
 let client;
@@ -10,7 +11,7 @@ const redisClient = async () => {
   if (client) return; // 如果客户端已经初始化，则不再重复初始化
 
   client = await createClient()
-    .on('error', err => console.log('Redis 连接失败', err))
+    .on('error', err => logger.error('Redis 连接失败：', err))
     .connect();
 };
 
@@ -24,8 +25,6 @@ const setKey = async (key, value, ttl = null) => {
   if (!client) await redisClient(); // 确保客户端已初始化
   value = JSON.stringify(value); // 将对象转换为JSON字符串
   await client.set(key, value);
-
-  console.log('key:', key, 'with TTL:', ttl);
 
   // 如果提供了ttl，则设置过期时间
   if (ttl !== null) {

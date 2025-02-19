@@ -8,7 +8,6 @@ const cors = require('cors')
 const { mailConsumer } = require('./utils/rabbit-mq');
 (async () => {
   await mailConsumer();
-  console.log('邮件消费者已启动');
 })();
 
 // 中间件
@@ -38,6 +37,7 @@ const adminChaptersRouter = require('./routes/admin/chapters');
 const adminChartsRouter = require('./routes/admin/charts');
 const adminAuthRouter = require('./routes/admin/auth');
 const adminAttachmentsRouter = require('./routes/admin/attachments');
+const adminLogsRouter = require('./routes/admin/logs');
 
 // 公共路由文件
 const uploadsRouter = require('./routes/common/uploads');
@@ -82,6 +82,7 @@ app.use('/admin/chapters', adminAuth, adminChaptersRouter);
 app.use('/admin/charts', adminAuth, adminChartsRouter);
 app.use('/admin/auth', adminAuthRouter);
 app.use('/admin/attachments', adminAuth, adminAttachmentsRouter);
+app.use('/admin/logs', adminAuth, adminLogsRouter);
 
 // 公共路由配置
 app.use('/common/uploads', userAuth, uploadsRouter);

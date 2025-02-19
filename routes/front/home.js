@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Course, Category, User } = require('../../models');
+const { Course1, Category, User } = require('../../models');
 const { success, failure } = require('../../utils/responses');
 const { setKey, getKey } = require('../../utils/redis');
 
