@@ -6,32 +6,32 @@ const adminAuth = require('../middlewares/admin-auth');
 const userAuth = require('../middlewares/user-auth');
 
 // 前台路由文件
-const indexRouter = require('../routes/front/home');
-const categoriesRouter = require('../routes/front/categories');
-const coursesRouter = require('../routes/front/courses');
-const chaptersRouter = require('../routes/front/chapters');
-const articlesRouter = require('../routes/front/articles');
-const settingsRouter = require('../routes/front/settings');
-const searchRouter = require('../routes/front/search');
-const authRouter = require('../routes/front/auth');
-const usersRouter = require('../routes/front/users');
-const likesRouter = require('../routes/front/likes');
+const indexRouter = require('./front/home');
+const categoriesRouter = require('./front/categories');
+const coursesRouter = require('./front/courses');
+const chaptersRouter = require('./front/chapters');
+const articlesRouter = require('./front/articles');
+const settingsRouter = require('./front/settings');
+const searchRouter = require('./front/search');
+const authRouter = require('./front/auth');
+const usersRouter = require('./front/users');
+const likesRouter = require('./front/likes');
 
 // 后台路由文件
-const adminArticlesRouter = require('../routes/admin/articles');
-const adminCatgoriesRouter = require('../routes/admin/categories');
-const adminSettingsRouter = require('../routes/admin/settings');
-const adminUsersRouter = require('../routes/admin/users');
-const adminCoursesRouter = require('../routes/admin/courses');
-const adminChaptersRouter = require('../routes/admin/chapters');
-const adminChartsRouter = require('../routes/admin/charts');
-const adminAuthRouter = require('../routes/admin/auth');
-const adminAttachmentsRouter = require('../routes/admin/attachments');
-const adminLogsRouter = require('../routes/admin/logs');
+const adminArticlesRouter = require('./admin/articles');
+const adminCatgoriesRouter = require('./admin/categories');
+const adminSettingsRouter = require('./admin/settings');
+const adminUsersRouter = require('./admin/users');
+const adminCoursesRouter = require('./admin/courses');
+const adminChaptersRouter = require('./admin/chapters');
+const adminChartsRouter = require('./admin/charts');
+const adminAuthRouter = require('./admin/auth');
+const adminAttachmentsRouter = require('./admin/attachments');
+const adminLogsRouter = require('./admin/logs');
 
 // 公共路由文件
-const uploadsRouter = require('../routes/common/uploads');
-const captchaRouter = require('../routes/common/captcha');
+const uploadsRouter = require('./common/uploads');
+const captchaRouter = require('./common/captcha');
 
 // 前台路由配置
 router.use('/front/home', indexRouter);

@@ -30,7 +30,7 @@ const corsOptions = { // 跨域配置
 app.use(cors(corsOptions));
 
 // 路由
-const routes = require('./config/routes');
+const routes = require('./routes/index');
 app.use(routes);
 
 module.exports = app;
