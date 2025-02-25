@@ -18,6 +18,7 @@ module.exports = (sequelize, DataTypes) => {
         as: 'likeCourses'
       })
       models.User.hasMany(models.Attachment, { as: 'attachments' })
+      models.User.hasMany(models.Order, { as: 'orders' })
     }
   }
   User.init(

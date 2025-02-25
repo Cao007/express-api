@@ -17,6 +17,7 @@ const authRouter = require('./front/auth')
 const usersRouter = require('./front/users')
 const likesRouter = require('./front/likes')
 const membershipsRouter = require('./front/memberships')
+const ordersRouter = require('./front/orders')
 
 // 后台路由文件
 const adminArticlesRouter = require('./admin/articles')
@@ -30,6 +31,7 @@ const adminAuthRouter = require('./admin/auth')
 const adminAttachmentsRouter = require('./admin/attachments')
 const adminLogsRouter = require('./admin/logs')
 const adminMembershipsRouter = require('./admin/memberships')
+const adminOrdersRouter = require('./admin/orders')
 
 // 公共路由文件
 const uploadsRouter = require('./common/uploads')
@@ -47,6 +49,7 @@ router.use('/front/auth', authRouter)
 router.use('/front/users', userAuth, usersRouter)
 router.use('/front/likes', userAuth, likesRouter)
 router.use('/front/memberships', membershipsRouter)
+router.use('/front/orders', userAuth, ordersRouter)
 
 // 后台路由配置
 router.use('/admin/articles', adminAuth, adminArticlesRouter)
@@ -60,6 +63,7 @@ router.use('/admin/auth', adminAuthRouter)
 router.use('/admin/attachments', adminAuth, adminAttachmentsRouter)
 router.use('/admin/logs', adminAuth, adminLogsRouter)
 router.use('/admin/memberships', adminAuth, adminMembershipsRouter)
+router.use('/admin/orders', adminAuth, adminOrdersRouter)
 
 // 公共路由配置
 router.use('/common/uploads', userAuth, uploadsRouter)
