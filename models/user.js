@@ -103,7 +103,8 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isUrl: { msg: '图片地址不正确。' }
         }
-      }
+      },
+      membershipExpiredAt: DataTypes.DATE // 大会员过期时间
     },
     {
       sequelize,

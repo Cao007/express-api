@@ -56,6 +56,12 @@ module.exports = (sequelize, DataTypes) => {
             }
           }
         }
+      },
+      free: {
+        type: DataTypes.BOOLEAN,
+        validate: {
+          isIn: { args: [[true, false]], msg: '是否免费课程的值必须是，免费：true 收费：false。' }
+        }
       }
     },
     {

@@ -1,5 +1,6 @@
 'use strict'
 const bcrypt = require('bcryptjs')
+const moment = require('moment/moment')
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -44,6 +45,17 @@ module.exports = {
           nickname: '普通用户3',
           gender: 1,
           role: 0,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        },
+        {
+          email: 'member@clwy.cn',
+          username: 'member',
+          password: bcrypt.hashSync('123123', 10),
+          nickname: '大会员用户',
+          gender: 1,
+          role: 1,
+          membershipExpiredAt: moment().add(1, 'year').toDate(),
           createdAt: new Date(),
           updatedAt: new Date()
         }
