@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const { sequelize, User } = require('../../models')
 const { success, failure } = require('../../utils/responses')
+const { initUserStream, broadUserCount } = require('../../streams/userCount')
 
 /**
  * 统计用户性别
@@ -28,27 +29,42 @@ router.get('/gender', async function (req, res) {
   }
 })
 
+// /**
+//  * 统计每个月用户数量
+//  * GET /admin/charts/user
+//  */
+// router.get('/user', async (req, res) => {
+//   try {
+//     const [results] = await sequelize.query(
+//       "SELECT DATE_FORMAT(`createdAt`, '%Y-%m') AS `month`, COUNT(*) AS `value` FROM `Users` GROUP BY `month` ORDER BY `month` ASC"
+//     )
+
+//     // 处理数据为echarts格式
+//     const data = {
+//       months: [],
+//       values: []
+//     }
+//     results.forEach((item) => {
+//       data.months.push(item.month)
+//       data.values.push(item.value)
+//     })
+
+//     success(res, '查询每月用户数量成功。', { data })
+//   } catch (err) {
+//     failure(res, error)
+//   }
+// })
+
 /**
- * 统计每个月用户数量
+ * SSE 统计每个月用户数量
  * GET /admin/charts/user
  */
 router.get('/user', async (req, res) => {
   try {
-    const [results] = await sequelize.query(
-      "SELECT DATE_FORMAT(`createdAt`, '%Y-%m') AS `month`, COUNT(*) AS `value` FROM `Users` GROUP BY `month` ORDER BY `month` ASC"
-    )
+    initUserStream(res, req)
 
-    // 处理数据为echarts格式
-    const data = {
-      months: [],
-      values: []
-    }
-    results.forEach((item) => {
-      data.months.push(item.month)
-      data.values.push(item.value)
-    })
-
-    success(res, '查询每月用户数量成功。', { data })
+    // 使用SSE广播数据
+    await broadUserCount()
   } catch (err) {
     failure(res, error)
   }

@@ -6,7 +6,7 @@ const { success, failure } = require('../utils/responses')
 module.exports = async (req, res, next) => {
   try {
     // 判断 Token 是否存在
-    const { token } = req.headers
+    const token = req.headers.token || req.query.token
     if (!token) {
       throw new Unauthorized('当前接口需要认证才能访问。')
     }

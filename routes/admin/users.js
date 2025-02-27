@@ -5,7 +5,7 @@ const { Op } = require('sequelize')
 const { NotFound } = require('http-errors')
 const { success, failure } = require('../../utils/responses')
 const { delKey } = require('../../utils/redis')
-
+const { broadUserCount } = require('../../streams/userCount')
 /**
  * 查询用户列表
  * GET /admin/users
@@ -95,6 +95,8 @@ router.post('/', async function (req, res) {
 
     await clearCache(user)
 
+    // 使用SSE广播数据
+    await broadUserCount()
     success(res, '创建用户成功。', { user }, 201)
   } catch (error) {
     failure(res, error)
@@ -115,6 +117,26 @@ router.put('/:id', async function (req, res) {
     await clearCache(user)
 
     success(res, '更新用户成功。', { user })
+  } catch (error) {
+    failure(res, error)
+  }
+})
+
+/**
+ * 删除用户
+ * DELETE /admin/users/:id
+ */
+router.delete('/:id', async function (req, res) {
+  try {
+    const user = await getUser(req)
+
+    await user.destroy()
+
+    await clearCache(user)
+
+    // 使用SSE广播数据
+    await broadUserCount()
+    success(res, '删除用户成功。')
   } catch (error) {
     failure(res, error)
   }

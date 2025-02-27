@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh">
+  <head>
+    <meta charset="UTF-8" />
+    <title>订单统计图表</title>
+    <style>
+      #orderChart {
+        width: 800px;
+        height: 400px;
+        margin: 50px auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="orderChart"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script>
+      // 初始化图表
+      const chartDom = document.querySelector('#orderChart')
+      const myChart = echarts.init(chartDom)
+      const option = {
+        title: {
+          text: '每个月用户数量'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        xAxis: {
+          type: 'category',
+          data: []
+        },
+        yAxis: {
+          type: 'value'
+        },
+        series: [
+          {
+            name: '用户数量',
+            type: 'bar',
+            data: [],
+            smooth: true
+          }
+        ]
+      }
+
+      // 改为自己的管理员 token
+      const token =
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImlhdCI6MTc0MDU4OTc0MywiZXhwIjoxNzQzMTgxNzQzfQ.haWtrP48-9prGqfFcALJLCDkV-2abRKKWHy4s0xHPbA'
+
+      // 建立 SSE 连接
+      const evtSource = new EventSource(`http://localhost:3000/admin/charts/user?token=${token}`)
+
+      // 监听消息
+      evtSource.onmessage = function (event) {
+        const data = JSON.parse(event.data)
+        option.xAxis.data = data.months
+        option.series[0].data = data.values
+        myChart.setOption(option)
+      }
+    </script>
+  </body>
+</html>
