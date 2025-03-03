@@ -25,7 +25,7 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      sex: {
+      gender: {
         allowNull: false,
         defaultValue: 2,
         type: Sequelize.TINYINT.UNSIGNED
@@ -40,6 +40,9 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
         type: Sequelize.TINYINT.UNSIGNED
+      },
+      avatar: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

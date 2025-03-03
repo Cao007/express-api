@@ -8,7 +8,7 @@ module.exports = {
       'Users',
       [
         {
-          email: 'admin@clwy.cn',
+          email: 'admin@qq.com',
           username: 'admin',
           password: bcrypt.hashSync('123123', 10),
           nickname: '超厉害的管理员',
@@ -18,7 +18,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          email: 'user1@clwy.cn',
+          email: 'user1@qq.com',
           username: 'user1',
           password: bcrypt.hashSync('123123', 10),
           nickname: '普通用户1',
@@ -28,7 +28,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          email: 'user2@clwy.cn',
+          email: 'user2@qq.com',
           username: 'user2',
           password: bcrypt.hashSync('123123', 10),
           nickname: '普通用户2',
@@ -38,7 +38,7 @@ module.exports = {
           updatedAt: new Date()
         },
         {
-          email: 'user3@clwy.cn',
+          email: 'user3@qq.com',
           username: 'user3',
           password: bcrypt.hashSync('123123', 10),
           nickname: '普通用户3',
