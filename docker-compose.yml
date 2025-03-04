@@ -1,7 +1,7 @@
 name: vue-admin-api
 services:
   mysql:
-    container_name: mysql
+    container_name: mysql_vue_admin_api
     networks:
       - vue-admin-api-network
     image: mysql:8.3.0
@@ -16,7 +16,7 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
   redis:
-    container_name: redis
+    container_name: redis_vue_admin_api
     networks:
       - vue-admin-api-network
     image: redis:7.4
@@ -25,7 +25,7 @@ services:
     volumes:
       - ./data/redis:/data
   rabbitmq:
-    container_name: rabbitmq
+    container_name: rabbitmq_vue_admin_api
     networks:
       - vue-admin-api-network
     image: rabbitmq:4.0-management
