@@ -19,7 +19,7 @@ const logger = createLogger({
     format.errors({ stack: true }), // 添加错误堆栈信息
     format.json()
   ),
-  defaultMeta: { service: 'express-api' },
+  defaultMeta: { service: 'vue-admin-api' },
   transports: [
     // 将 `error` 或 更高级别的错误写入日志文件：`error.log`
     // new transports.File({ filename: 'error.log', level: 'error' }),

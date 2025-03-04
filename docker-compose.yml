@@ -1,5 +1,9 @@
+name: vue-admin-api
 services:
   mysql:
+    container_name: mysql
+    networks:
+      - vue-admin-api-network
     image: mysql:8.3.0
     command: --default-authentication-plugin=mysql_native_password
       --character-set-server=utf8mb4
@@ -12,12 +16,18 @@ services:
     volumes:
       - ./data/mysql:/var/lib/mysql
   redis:
+    container_name: redis
+    networks:
+      - vue-admin-api-network
     image: redis:7.4
     ports:
       - '6379:6379'
     volumes:
       - ./data/redis:/data
   rabbitmq:
+    container_name: rabbitmq
+    networks:
+      - vue-admin-api-network
     image: rabbitmq:4.0-management
     ports:
       - '5672:5672'
@@ -27,3 +37,6 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: 123456
+networks:
+  vue-admin-api-network:
+    driver: bridge
